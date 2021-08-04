@@ -8,11 +8,8 @@
     android:orientation="vertical"
     tools:context=".UpComingFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/upcoming_rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/upcoming_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 </LinearLayout>

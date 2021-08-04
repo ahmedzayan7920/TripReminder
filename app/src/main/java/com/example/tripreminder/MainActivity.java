@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -60,11 +61,13 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
                         navigationView.setCheckedItem(R.id.drawer_upcoming);
                         toolbar.setTitle("UpComing");
+                        toolbar.getMenu().getItem(1).setVisible(true);
                         break;
                     case R.id.drawer_history:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
                         navigationView.setCheckedItem(R.id.drawer_history);
                         toolbar.setTitle("History");
+                        toolbar.getMenu().getItem(1).setVisible(false);
                         break;
                     case R.id.drawer_sync:
                         Toast.makeText(getApplicationContext(), "Sync Clicked", Toast.LENGTH_SHORT).show();
