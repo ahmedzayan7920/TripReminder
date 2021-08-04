@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item android:title="Main">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/drawer_upcoming"
+                    android:icon="@drawable/ic_upcoming"
+                    android:title="UpComing" />
+                <item
+                    android:id="@+id/drawer_history"
+                    android:icon="@drawable/ic_history"
+                    android:title="History" />
+            </group>
+        </menu>
+    </item>
+
+
+    <item android:title="Other">
+        <menu>
+            <item
+                android:id="@+id/drawer_sync"
+                android:icon="@drawable/ic_sync"
+                android:title="Sync" />
+            <item
+                android:id="@+id/drawer_Logout"
+                android:icon="@drawable/ic_exit"
+                android:title="Logout" />
+        </menu>
+    </item>
+
+</menu>
