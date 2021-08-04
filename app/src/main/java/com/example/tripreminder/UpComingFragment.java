@@ -1,10 +1,11 @@
 package com.example.tripreminder;
 
-import android.app.Dialog;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class UpComingFragment extends Fragment{
+public class UpComingFragment extends Fragment {
     private RecyclerView rv;
     private UpComingAdapter adapter;
     private ArrayList<Trip> trips;
@@ -54,32 +55,32 @@ public class UpComingFragment extends Fragment{
         adapter.notifyDataSetChanged();
         adapter.setOnItemClickListener(new UpComingAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(int position) {
+            public void onItemClick(int position, Context context) {
                 Toast.makeText(getContext(), "Clicked on " + (position + 1), Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onMenuClick(int position, View v) {
+            public void onMenuClick(int position, View v, Context context) {
                 setPosition(position);
-                PopupMenu menu = new PopupMenu(getContext(), v);
+                PopupMenu menu = new PopupMenu(context, v);
                 menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.mi_note:
-                                Toast.makeText(getContext(), "Note", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Note", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.mi_edit:
-                                Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.mi_delete:
                                 Log.i("01230123", getPosition() + "");
                                 trips.remove(getPosition());
                                 adapter.notifyItemRemoved(getPosition());
-                                Toast.makeText(getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
                                 return true;
                             case R.id.mi_cancel:
-                                Toast.makeText(getContext(), "Cancel", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Cancel", Toast.LENGTH_SHORT).show();
                                 return true;
                         }
                         return false;
@@ -90,13 +91,22 @@ public class UpComingFragment extends Fragment{
             }
 
             @Override
-            public void onNoteClick(int position) {
-                Dialog d = new Dialog(getContext());
-                d.show();
+            public void onNoteClick(int position, Context context) {
+                String[] notes = {"ahmed", "mohamed", "zayan"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Notes")
+                        .setItems(notes, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+
+                }).show();
             }
 
             @Override
-            public void onStartClick(int position) {
+            public void onStartClick(int position, Context context) {
 
             }
         });

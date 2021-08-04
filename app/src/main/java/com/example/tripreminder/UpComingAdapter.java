@@ -19,10 +19,10 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
-        void onMenuClick(int position, View v);
-        void onNoteClick(int position);
-        void onStartClick(int position);
+        void onItemClick(int position, Context context);
+        void onMenuClick(int position, View v, Context context);
+        void onNoteClick(int position, Context context);
+        void onStartClick(int position, Context context);
 
     }
 
@@ -59,7 +59,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
                     if (listener != null){
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION){
-                            listener.onItemClick(position);
+                            listener.onItemClick(position, context);
                         }
                     }
                 }
@@ -71,7 +71,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
                     if (listener != null){
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION){
-                            listener.onMenuClick(position, v);
+                            listener.onMenuClick(position, v, context);
                         }
                     }
                 }
@@ -83,7 +83,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
                     if (listener != null){
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION){
-                            listener.onNoteClick(position);
+                            listener.onNoteClick(position, context);
                         }
                     }
                 }
@@ -95,7 +95,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
                     if (listener != null){
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION){
-                            listener.onStartClick(position);
+                            listener.onStartClick(position, context);
                         }
                     }
                 }
