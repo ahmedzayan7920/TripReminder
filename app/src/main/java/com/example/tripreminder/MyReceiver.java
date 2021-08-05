@@ -33,5 +33,7 @@ public class MyReceiver extends BroadcastReceiver {
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(NOTIFICATION_ID, builder.build());
+        clearAbortBroadcast();
     }
+
 }
