@@ -10,9 +10,11 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,13 +36,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("UpComing");
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.drawer_view);
+
+        Intent notifyIntent = new Intent(this, MyReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        long currentTime = System.currentTimeMillis();
+        long seconds = 1000*10;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, currentTime + seconds, pendingIntent);
+
+
+        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+               // 1000 * 60 * 60 * 24, pendingIntent);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -114,14 +126,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_add:
-                displayNotification();
+                //displayNotification();
                 //Intent intent = new Intent(MainActivity.this, Add.class);
                 //startActivity(intent);
                 return true;
         }
         return false;
     }
-
+/*
     private void displayNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Channel Name", NotificationManager.IMPORTANCE_HIGH);
@@ -146,6 +158,6 @@ public class MainActivity extends AppCompatActivity {
         managerCompat.notify(NOTIFICATION_ID, builder.build());
 
 
-        }
+    }*/
 
 }
