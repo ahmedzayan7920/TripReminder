@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HistoryFragment extends Fragment {
     private RecyclerView rv2;
@@ -23,13 +24,6 @@ public class HistoryFragment extends Fragment {
         rv2 = view.findViewById(R.id.history_rv);
 
         trips = new ArrayList<>();
-        Trip trip = new Trip("11/1/2222", "22:22", "Zagazig University", "upcoming", "Damietta", "Zagazig");
-        trips.add(trip);
-        trips.add(trip);
-        trips.add(trip);
-        trips.add(trip);
-        trips.add(trip);
-        trips.add(trip);
 
         adapter = new HistoryAdapter(getContext(), trips);
         rv2.setAdapter(adapter);

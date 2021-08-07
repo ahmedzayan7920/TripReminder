@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff9541"
+    tools:context=".AddAndEdit">
+
+    <Button
+        android:id="@+id/addTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:text="@string/addTrip"
+        app:backgroundTint="@color/teal_700"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.454"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/add_tv_time"
+        android:layout_width="131dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="24dp"
+        android:ems="10"
+        android:inputType="time"
+        app:layout_constraintBottom_toTopOf="@+id/trip"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/startDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/startDetails"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/iv_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_date"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_tv_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/calendar" />
+
+    <ImageView
+        android:id="@+id/iv_time"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/add_tv_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toEndOf="@+id/iv_date"
+        app:layout_constraintTop_toTopOf="@+id/iv_date"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/clock" />
+
+    <Spinner
+        android:id="@+id/trip"
+        android:layout_width="163dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginRight="28dp"
+        app:layout_constraintBottom_toBottomOf="@+id/repeat"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Spinner
+        android:id="@+id/repeat"
+        android:layout_width="163dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/notes"
+        app:layout_constraintEnd_toStartOf="@+id/trip"
+        app:layout_constraintHorizontal_bias="0.561"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/add_tv_date"
+        android:layout_width="131dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="24dp"
+        android:ems="10"
+        android:inputType="date"
+        app:layout_constraintBottom_toTopOf="@+id/repeat"
+        app:layout_constraintEnd_toStartOf="@+id/add_tv_time"
+        app:layout_constraintHorizontal_bias="0.457"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--    <AutoCompleteTextView-->
+<!--        android:id="@+id/endTxt"-->
+<!--        android:layout_width="319dp"-->
+<!--        android:layout_height="54dp"-->
+<!--        android:layout_marginBottom="24dp"-->
+<!--        android:drawableLeft="@drawable/ic_baseline_location_on_24"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/startDetails"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.423"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <EditText android:id="@+id/et_end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/startDetails"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.453"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/endPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/endPoint"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/et_end"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#000000" />
+
+    <EditText android:id="@+id/et_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/endPoint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tripName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="13dp"
+        android:gravity="center"
+        android:text="@string/TripName"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toTopOf="@+id/et_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/startPoint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startPoint"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+
+        app:layout_constraintBottom_toTopOf="@+id/et_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.098"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/notes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notes"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+
+        app:layout_constraintBottom_toTopOf="@+id/note"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.112"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/startPoint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.201"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/note"
+        android:layout_width="279dp"
+        android:layout_height="98dp"
+        app:layout_constraintBottom_toTopOf="@+id/addTrip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripViewHolder> {
     private Context context;
@@ -106,12 +107,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
         Trip t = trips.get(position);
-        holder.tvDate.setText(t.getDate());
-        holder.tvTime.setText(t.getTime());
+        int year = t.getCalendar().get(Calendar.YEAR);
+        int month = t.getCalendar().get(Calendar.MONTH);
+        int day = t.getCalendar().get(Calendar.DAY_OF_MONTH);
+        int hour = t.getCalendar().get(Calendar.HOUR);
+        int minute = t.getCalendar().get(Calendar.MINUTE);
+        holder.tvDate.setText(day+"/"+(month+1)+"/"+year);
+        holder.tvTime.setText(hour+":"+minute);
         holder.tvName.setText(t.getName());
         holder.tvState.setText(t.getState());
         holder.tvStart.setText(t.getStart());
-        holder.tvDestination.setText(t.getDestination());
+        holder.tvDestination.setText(t.getEnd());
 
         boolean expand = trips.get(position).isExpand();
         if (expand) {

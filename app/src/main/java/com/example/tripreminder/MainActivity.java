@@ -1,6 +1,7 @@
 package com.example.tripreminder;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -14,11 +15,15 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,23 +58,6 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        Intent notifyIntent = new Intent(this, MyReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.YEAR, 2021);
-        calendar.set(Calendar.MONTH, Calendar.AUGUST);
-        calendar.set(Calendar.DAY_OF_MONTH, 5);
-        calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 57);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-
-        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-               // 1000 * 60 * 60 * 24, pendingIntent);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -79,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             navigationView.setCheckedItem(R.id.drawer_upcoming);
 
         }
-
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -144,39 +131,57 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_add:
-                //displayNotification();
-                //Intent intent = new Intent(MainActivity.this, Add.class);
-                //startActivity(intent);
+                Intent intent = new Intent(getBaseContext(), AddAndEdit.class);
+                startActivity(intent);
                 return true;
         }
         return false;
     }
-/*
-    private void displayNotification() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Channel Name", NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("Channel Description");
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getBaseContext(), CHANNEL_ID);
-        builder.setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("My Title")
-                .setContentText("egjipotijgpoerjgoipjtroirjeoirjehoi")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("My data"))
-                .addAction(R.mipmap.ic_launcher, "Replay", pendingIntent);
-
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(NOTIFICATION_ID, builder.build());
-
-
-    }*/
-
 
 }
+
+
+    /*
+    Intent notifyIntent = new Intent(this, MyReceiver.class);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+    Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.YEAR, 2021);
+                calendar.set(Calendar.MONTH, Calendar.AUGUST);
+                calendar.set(Calendar.DAY_OF_MONTH, 7);
+                calendar.set(Calendar.HOUR_OF_DAY, 19);
+                calendar.set(Calendar.MINUTE, 25);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                */
+/*--------------------------------------------------------------------------------------*/
+/*
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                calendar.set(Calendar.YEAR, 2021);
+                calendar.set(Calendar.MONTH, Calendar.AUGUST);
+                calendar.set(Calendar.DAY_OF_MONTH, 7);
+                calendar.set(Calendar.HOUR_OF_DAY, 20);
+                calendar.set(Calendar.MINUTE, 4);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+                long t = calendar.getTimeInMillis() - System.currentTimeMillis();
+                Log.i("time", t+"");
+                ComponentName componentName = new ComponentName(getBaseContext(), MyJobService.class);
+        JobInfo info;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+        info = new JobInfo.Builder(10,componentName)
+        .setPeriodic(t)
+        .build();
+        }else{
+        info = new JobInfo.Builder(10,componentName)
+        .setMinimumLatency(t)
+        .build();
+        }
+
+        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        scheduler.schedule(info);
+        */
