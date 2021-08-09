@@ -25,12 +25,13 @@
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/up_coming_custom_trip.xml" value="0.20520833333333333" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/menu/drawer.xml" value="0.5" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/menu/main_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/menu/setting_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/menu/test.xml" value="0.36666666666666664" />
         <entry key="..\:/programs/windowsSDK/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.3423913043478261" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

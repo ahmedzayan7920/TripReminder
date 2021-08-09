@@ -107,11 +107,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
         Trip t = trips.get(position);
-        int year = t.getCalendar().get(Calendar.YEAR);
-        int month = t.getCalendar().get(Calendar.MONTH);
-        int day = t.getCalendar().get(Calendar.DAY_OF_MONTH);
-        int hour = t.getCalendar().get(Calendar.HOUR);
-        int minute = t.getCalendar().get(Calendar.MINUTE);
+        int year = t.getDate().getYear();
+        int month = t.getDate().getMonth();
+        int day = t.getDate().getDate();
+        int hour = t.getDate().getHours();
+        int minute = t.getDate().getMinutes();
         holder.tvDate.setText(day+"/"+(month+1)+"/"+year);
         holder.tvTime.setText(hour+":"+minute);
         holder.tvName.setText(t.getName());

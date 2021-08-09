@@ -32,7 +32,13 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("UpComing");
         setSupportActionBar(toolbar);
@@ -63,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         if (savedInstanceState == null) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
             navigationView.setCheckedItem(R.id.drawer_upcoming);
-
         }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -76,13 +83,13 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
                         navigationView.setCheckedItem(R.id.drawer_upcoming);
                         toolbar.setTitle("UpComing");
-                        toolbar.getMenu().getItem(1).setVisible(true);
+                        toolbar.getMenu().getItem(0).setVisible(true);
                         break;
                     case R.id.drawer_history:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
                         navigationView.setCheckedItem(R.id.drawer_history);
                         toolbar.setTitle("History");
-                        toolbar.getMenu().getItem(1).setVisible(false);
+                        toolbar.getMenu().getItem(0).setVisible(false);
                         break;
                     case R.id.drawer_sync:
                         Toast.makeText(getApplicationContext(), "Sync Clicked", Toast.LENGTH_SHORT).show();
@@ -112,18 +119,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.main_add);
-        SearchView searchView = (SearchView) menu.findItem(R.id.main_search).getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
         return true;
     }
 
@@ -137,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
 
 }
 

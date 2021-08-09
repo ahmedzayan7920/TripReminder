@@ -1,9 +1,10 @@
 package com.example.tripreminder;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class Trip {
-    private Calendar calendar;
+    private Date date;
     private String name;
     private String state;
     private String start;
@@ -17,18 +18,10 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(Calendar calendar, String name, String state, String start, String end) {
-        this.calendar = calendar;
-        this.calendar = calendar;
-        this.name = name;
-        this.state = state;
-        this.start = start;
-        this.end = end;
-        this.expand = false;
-    }
 
-    public Trip(Calendar calendar, String name, String state, String start, String end, String key, String notes, String way, String repeat) {
-        this.calendar = calendar;
+
+    public Trip(Date date, String name, String state, String start, String end, String key, String notes, String way, String repeat) {
+        this.date = date;
         this.name = name;
         this.state = state;
         this.start = start;
@@ -39,12 +32,12 @@ public class Trip {
         this.repeat = repeat;
     }
 
-    public Calendar getCalendar() {
-        return calendar;
+    public Date getDate() {
+        return date;
     }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getName() {
