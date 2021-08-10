@@ -13,7 +13,7 @@
     <string name="TripName">Trip Name</string>
     <string name="startPoint">Start Point</string>
     <string name="endPoint">End Point</string>
-    <string name="startDetails">Start Details</string>
+    <string name="startDetails">Start Date and Time</string>
     <string name="addTrip">Add Trip</string>
     <string name="apiKey">AIzaSyCW_X5xn8RMYkRpAnZt_OEx1UAZgCpOVMM</string>
     <string name="notes">Notes</string>

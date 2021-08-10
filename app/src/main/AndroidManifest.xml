@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.tripreminder">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +19,7 @@
         <service
             android:name=".MyIntentService"
             android:exported="false" />
+        <service android:name=".WidgetService" android:enabled="true" />
 
         <receiver
             android:name=".MyReceiver"
@@ -28,6 +31,12 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
+            android:name=".DialogActivity"
+            android:exported="true"
+            android:label="Alert"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
@@ -37,7 +46,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".AddAndEdit" />
+        <activity android:name=".AddAndEdit"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

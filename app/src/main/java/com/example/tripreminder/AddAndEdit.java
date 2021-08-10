@@ -3,8 +3,14 @@ package com.example.tripreminder;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,14 +47,14 @@ import java.util.Objects;
 
 
 public class AddAndEdit extends AppCompatActivity {
-    TextView tvTime , tvDate;
+    TextView tvTime, tvDate;
     EditText etName, etStart, etEnd;
     MultiAutoCompleteTextView notes;
     Button btn;
     Calendar c;
     Spinner way;
     Spinner repeat;
-    ImageView date ,time;
+    ImageView date, time;
     Calendar calendar;
     String name;
     String start;
@@ -78,9 +84,9 @@ public class AddAndEdit extends AppCompatActivity {
         repeat = findViewById(R.id.repeat);
 
         String key = getIntent().getStringExtra(UpComingFragment.TRIP_KEY);
-        if (key == null){
+        if (key == null) {
 
-        }else {
+        } else {
             FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -88,27 +94,27 @@ public class AddAndEdit extends AppCompatActivity {
                     etName.setText(trip.getName());
                     etStart.setText(trip.getStart());
                     etEnd.setText(trip.getEnd());
-                    if (trip.getWay().contains("One")){
+                    if (trip.getWay().contains("One")) {
                         way.setSelection(0);
-                    }else{
+                    } else {
                         way.setSelection(1);
                     }
 
-                    if (trip.getRepeat().equals("Daily")){
+                    if (trip.getRepeat().equals("Daily")) {
                         repeat.setSelection(1);
-                    }else if (trip.getRepeat().equals("Weekly")){
+                    } else if (trip.getRepeat().equals("Weekly")) {
                         repeat.setSelection(2);
-                    }else if (trip.getRepeat().equals("Monthly")){
+                    } else if (trip.getRepeat().equals("Monthly")) {
                         repeat.setSelection(3);
-                    }else{
+                    } else {
                         repeat.setSelection(0);
                     }
-                    tvDate.setText(trip.getDate().getYear()+"/"+(trip.getDate().getMonth()+1)+"/"+trip.getDate().getDate());
+                    tvDate.setText(trip.getDate().getYear() + "/" + (trip.getDate().getMonth() + 1) + "/" + trip.getDate().getDate());
                     allDate.setYear(trip.getDate().getYear());
                     allDate.setMonth(trip.getDate().getMonth());
                     allDate.setDate(trip.getDate().getDate());
 
-                    tvTime.setText(trip.getDate().getHours()+":"+trip.getDate().getMinutes());
+                    tvTime.setText(trip.getDate().getHours() + ":" + trip.getDate().getMinutes());
                     allDate.setHours(trip.getDate().getHours());
                     allDate.setMinutes(trip.getDate().getMinutes());
 
@@ -145,7 +151,7 @@ public class AddAndEdit extends AppCompatActivity {
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null){
+                if (key == null) {
                     c = Calendar.getInstance();
                     int day = c.get(Calendar.DAY_OF_MONTH);
                     int month = c.get(Calendar.MONTH);
@@ -154,19 +160,19 @@ public class AddAndEdit extends AppCompatActivity {
                     DatePickerDialog d = new DatePickerDialog(AddAndEdit.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                            tvDate.setText(i+"/"+(i1+1)+"/"+i2);
+                            tvDate.setText(i + "/" + (i1 + 1) + "/" + i2);
                             allDate.setYear(i);
                             allDate.setMonth(i1);
                             allDate.setDate(i2);
                         }
                     }, year, month, day);
                     d.show();
-                } else{
+                } else {
 
                     DatePickerDialog d = new DatePickerDialog(AddAndEdit.this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                            tvDate.setText(i+"/"+(i1+1)+"/"+i2);
+                            tvDate.setText(i + "/" + (i1 + 1) + "/" + i2);
                             allDate.setYear(i);
                             allDate.setMonth(i1);
                             allDate.setDate(i2);
@@ -183,24 +189,24 @@ public class AddAndEdit extends AppCompatActivity {
         time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null){
+                if (key == null) {
                     c = Calendar.getInstance();
                     int hour = c.get(Calendar.HOUR_OF_DAY);
                     int minute = c.get(Calendar.MINUTE);
                     TimePickerDialog t = new TimePickerDialog(AddAndEdit.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                            tvTime.setText(i+":"+i1);
+                            tvTime.setText(i + ":" + i1);
                             allDate.setHours(i);
                             allDate.setMinutes(i1);
                         }
                     }, hour, minute, true);
                     t.show();
-                }else{
+                } else {
                     TimePickerDialog t = new TimePickerDialog(AddAndEdit.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                            tvTime.setText(i+":"+i1);
+                            tvTime.setText(i + ":" + i1);
                             allDate.setHours(i);
                             allDate.setMinutes(i1);
                         }
@@ -214,31 +220,106 @@ public class AddAndEdit extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null){
-                    name = etName.getText().toString();
-                    start = etStart.getText().toString();
-                    end = etEnd.getText().toString();
-                    String w = way.getSelectedItem().toString();
-                    String r = repeat.getSelectedItem().toString();
-                    String n = notes.getText().toString();
+                if (!etName.getText().toString().isEmpty() && !etStart.getText().toString().isEmpty() && !etEnd.getText().toString().isEmpty() &&
+                        !tvDate.getText().toString().isEmpty() && !tvTime.getText().toString().isEmpty()) {
+                    if (key == null) {
+                        name = etName.getText().toString();
+                        start = etStart.getText().toString();
+                        end = etEnd.getText().toString();
+                        String w = way.getSelectedItem().toString();
+                        String r = repeat.getSelectedItem().toString();
+                        String n = notes.getText().toString();
 
-                    String key =  FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
-                    Trip t = new Trip(allDate, name, "upcoming", start, end, key, n, w, r);
-                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(t);
-                    finish();
-                }else{
-                    name = etName.getText().toString();
-                    start = etStart.getText().toString();
-                    end = etEnd.getText().toString();
-                    String w = way.getSelectedItem().toString();
-                    String r = repeat.getSelectedItem().toString();
-                    String n = notes.getText().toString();
+                        String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
+                        Trip t = new Trip(allDate, name, "upcoming", start, end, key, n, w, r);
+                        FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(t);
+/*
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, t.getDate().getYear());
+                        calendar.set(Calendar.MONTH, t.getDate().getMonth());
+                        calendar.set(Calendar.DAY_OF_MONTH, t.getDate().getDate());
+                        calendar.set(Calendar.HOUR_OF_DAY, t.getDate().getHours());
+                        calendar.set(Calendar.MINUTE, t.getDate().getMinutes());
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+                        long time = calendar.getTimeInMillis() - System.currentTimeMillis();
+                        Log.i("01230123", "Job added after :  "+time+"  Milliseconds");
+                        ComponentName componentName = new ComponentName(getBaseContext(), MyJobService.class);
+                        JobInfo info;
+                        PersistableBundle bundle = new PersistableBundle();
+                        bundle.putString("trip_key", key);
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+                            info = new JobInfo.Builder(10,componentName)
+                                    .setPeriodic(time)
+                                    .setExtras(bundle)
+                                    .build();
+                        }else{
+                            info = new JobInfo.Builder(10,componentName)
+                                    .setMinimumLatency(time)
+                                    .setExtras(bundle)
+                                    .build();
+                        }
 
-                    Trip t = new Trip(allDate, name, "upcoming", start, end, key, n, w, r);
-                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(t);
-                    finish();
+                        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                        scheduler.schedule(info);
+
+*/
+                        finish();
+                    } else {
+                        name = etName.getText().toString();
+                        start = etStart.getText().toString();
+                        end = etEnd.getText().toString();
+                        String w = way.getSelectedItem().toString();
+                        String r = repeat.getSelectedItem().toString();
+                        String n = notes.getText().toString();
+
+                        Trip t = new Trip(allDate, name, "upcoming", start, end, key, n, w, r);
+                        FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(t);
+/*
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, t.getDate().getYear());
+                        calendar.set(Calendar.MONTH, t.getDate().getMonth());
+                        calendar.set(Calendar.DAY_OF_MONTH, t.getDate().getDate());
+                        calendar.set(Calendar.HOUR_OF_DAY, t.getDate().getHours());
+                        calendar.set(Calendar.MINUTE, t.getDate().getMinutes());
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+                        long time = calendar.getTimeInMillis() - System.currentTimeMillis();
+                        Log.i("01230123", "Job added after :  "+time+"  Milliseconds");
+                        ComponentName componentName = new ComponentName(getBaseContext(), MyJobService.class);
+                        JobInfo info;
+                        PersistableBundle bundle = new PersistableBundle();
+                        bundle.putString("trip_key", key);
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+                            info = new JobInfo.Builder(10,componentName)
+                                    .setPeriodic(time)
+                                    .setExtras(bundle)
+                                    .build();
+                        }else{
+                            info = new JobInfo.Builder(10,componentName)
+                                    .setMinimumLatency(time)
+                                    .setExtras(bundle)
+                                    .build();
+                        }
+
+                        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                        scheduler.schedule(info);*/
+                        finish();
+                    }
+                } else {
+                    if (etName.getText().toString().isEmpty()) {
+                        Toast.makeText(AddAndEdit.this, "Please Enter Trip Name", Toast.LENGTH_SHORT).show();
+                    } else if (etStart.getText().toString().isEmpty()) {
+                        Toast.makeText(AddAndEdit.this, "Please Enter Trip Start Point", Toast.LENGTH_SHORT).show();
+                    } else if (etEnd.getText().toString().isEmpty()) {
+                        Toast.makeText(AddAndEdit.this, "Please Enter Trip End Point", Toast.LENGTH_SHORT).show();
+                    } else if (tvDate.getText().toString().isEmpty()) {
+                        Toast.makeText(AddAndEdit.this, "Please Enter Trip Date", Toast.LENGTH_SHORT).show();
+                    } else if (tvTime.getText().toString().isEmpty()) {
+                        Toast.makeText(AddAndEdit.this, "Please Enter Trip Time", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
-
             }
         });
     }

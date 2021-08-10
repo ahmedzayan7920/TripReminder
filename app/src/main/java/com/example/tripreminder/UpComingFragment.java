@@ -1,11 +1,17 @@
 package com.example.tripreminder;
 
+import static android.content.Context.JOB_SCHEDULER_SERVICE;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class UpComingFragment extends Fragment {
     private RecyclerView rv;
@@ -38,6 +46,7 @@ public class UpComingFragment extends Fragment {
     private static int position;
     public static final String TRIP_KEY = null;
     private ProgressDialog pd;
+    public static int jobID = 0;
 
     public int getPosition() {
         return position;
@@ -126,11 +135,27 @@ public class UpComingFragment extends Fragment {
 
             @Override
             public void onStartClick(int position, Context context) {
-                Trip t = trips.get(position);
-                t.setState("Done");
-                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(t.getKey()).setValue(t);
+                Trip t1 = trips.get(position);
+/*
+                ComponentName componentName = new ComponentName(context, MyJobService.class);
+                JobInfo info;
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+                    info = new JobInfo.Builder(10,componentName)
+                            .setPeriodic(5000)
+                            .build();
+                }else{
+                    info = new JobInfo.Builder(10,componentName)
+                            .setMinimumLatency(5000)
+                            .build();
+                }
+
+                JobScheduler scheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);
+                scheduler.schedule(info);*/
+                t1.setState("Done");
+                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(t1.getKey()).setValue(t1);
                 trips.remove(position);
                 adapter.notifyItemRemoved(position);
+                context.startService(new Intent(context, WidgetService.class));
             }
         });
 
@@ -144,9 +169,47 @@ public class UpComingFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 trips.clear();
+                JobScheduler scheduler = (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
+                scheduler.cancelAll();
                 for (DataSnapshot t : snapshot.getChildren()) {
                     Trip trip = t.getValue(Trip.class);
                     if (trip.getState().equals("upcoming")){
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, trip.getDate().getYear());
+                        calendar.set(Calendar.MONTH, trip.getDate().getMonth());
+                        calendar.set(Calendar.DAY_OF_MONTH, trip.getDate().getDate());
+                        calendar.set(Calendar.HOUR_OF_DAY, trip.getDate().getHours());
+                        calendar.set(Calendar.MINUTE, trip.getDate().getMinutes());
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
+                        long time = calendar.getTimeInMillis() - System.currentTimeMillis();
+                        if (time > 0){
+
+                            ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
+                            JobInfo info;
+                            PersistableBundle bundle = new PersistableBundle();
+                            bundle.putString("trip_key", trip.getKey());
+                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
+                                info = new JobInfo.Builder(jobID,componentName)
+                                        .setPeriodic(time)
+                                        .setExtras(bundle)
+                                        .build();
+                            }else{
+                                info = new JobInfo.Builder(jobID,componentName)
+                                        .setMinimumLatency(time)
+                                        .setExtras(bundle)
+                                        .build();
+                            }
+                            Log.i("01230123", "Job "+jobID+" added after :  "+time+"  Milliseconds");
+
+                            scheduler.schedule(info);
+                            jobID++;
+                        }else {
+                            trip.setState("Time Pass");
+                            FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
+                        }
+
                         trips.add(trip);
                         adapter.notifyDataSetChanged();
                     }
