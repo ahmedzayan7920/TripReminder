@@ -5,22 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -30,19 +18,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,13 +38,34 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "aaa";
     public static final int NOTIFICATION_ID = 10;
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+
+    private TextView tvUserName;
+    private TextView tvUserEmail;
+    private ImageView ivUserImage;
+    static boolean flag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.drawer_view);
+        View view = navigationView.getHeaderView(0);
+
+        if (flag) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            flag = false;
+        }
+
+        Log.i("0147852369", "Opened");
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
+        navigationView.setCheckedItem(R.id.drawer_upcoming);
+
+
+        tvUserName = view.findViewById(R.id.tv_user_name);
+        tvUserEmail = view.findViewById(R.id.tv_user_email);
+        ivUserImage = view.findViewById(R.id.iv_user_image);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             if (!Settings.canDrawOverlays(this)) {
@@ -71,20 +79,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("UpComing");
         setSupportActionBar(toolbar);
 
-        drawer = findViewById(R.id.drawer_layout);
-        navigationView = findViewById(R.id.drawer_view);
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
+
+        tvUserName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        tvUserEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        Picasso.with(this)
+                .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
+                .into(ivUserImage);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
-            navigationView.setCheckedItem(R.id.drawer_upcoming);
-        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Sync Clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.drawer_Logout:
-                        firebaseAuth.signOut();
+                        FirebaseAuth.getInstance().signOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
                         finish();
                         break;
@@ -159,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
 
 

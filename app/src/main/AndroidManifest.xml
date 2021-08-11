@@ -15,17 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TripReminder">
-
-        <service
-            android:name=".MyIntentService"
-            android:exported="false" />
-        <service android:name=".WidgetService" android:enabled="true" />
-
         <receiver
             android:name=".MyReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"></receiver>
 
+        <service
+            android:name=".BubbleService"
+            android:enabled="true"
+            android:exported="true" />
         <service
             android:name=".MyJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
@@ -35,7 +33,6 @@
             android:exported="true"
             android:label="Alert"
             android:theme="@style/Theme.AppCompat.Dialog" />
-
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -46,8 +43,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".AddAndEdit"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".AddAndEdit"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

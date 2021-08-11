@@ -4,6 +4,7 @@ import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -23,6 +24,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
+
 public class DialogActivity extends AppCompatActivity {
 
     private TextView tvName;
@@ -33,6 +36,7 @@ public class DialogActivity extends AppCompatActivity {
     private Ringtone r;
 
     private Trip tr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,19 +54,19 @@ public class DialogActivity extends AppCompatActivity {
         }
         this.setFinishOnTouchOutside(false);
         tvName = findViewById(R.id.tv_dialog_trip_name);
-        btnCancel= findViewById(R.id.btn_dialog_cancel);
-        btnLater= findViewById(R.id.btn_dialog_later);
-        btnStart= findViewById(R.id.btn_dialog_start);
+        btnCancel = findViewById(R.id.btn_dialog_cancel);
+        btnLater = findViewById(R.id.btn_dialog_later);
+        btnStart = findViewById(R.id.btn_dialog_start);
 
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tr.setState("Canceled");
-                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(tr);
                 r.stop();
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(NOTIFICATION_ID);
+                tr.setState("Canceled");
+                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(tr);
                 finish();
             }
         });
@@ -78,8 +82,12 @@ public class DialogActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), BubbleService.class);
+                intent.putExtra("notes", tr.getNotes());
+                startService(intent);
                 tr.setState("Done");
-                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(tr);
+                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
+                finish();
             }
         });
 
@@ -92,12 +100,13 @@ public class DialogActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot t : snapshot.getChildren()) {
                     Trip trip = t.getValue(Trip.class);
-                    if (trip.getKey().equals(key)){
+                    if (trip.getKey().equals(key)) {
                         tr = trip;
                         tvName.setText(tr.getName());
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

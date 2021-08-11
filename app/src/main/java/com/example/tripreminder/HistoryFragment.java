@@ -34,10 +34,8 @@ public class HistoryFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         rv2 = view.findViewById(R.id.history_rv);
-
         trips = new ArrayList<>();
         getTrips();
-
         adapter = new HistoryAdapter(getContext(), trips);
         rv2.setAdapter(adapter);
         rv2.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -55,8 +53,8 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onDeleteClick(int position) {
                 String key = trips.get(position).getKey();
-                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
                 trips.remove(position);
+                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
                 adapter.notifyItemRemoved(position);
             }
         });
@@ -65,7 +63,6 @@ public class HistoryFragment extends Fragment {
     }
 
     private void getTrips() {
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

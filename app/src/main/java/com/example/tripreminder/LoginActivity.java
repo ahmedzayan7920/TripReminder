@@ -26,6 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText email;
@@ -45,14 +46,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         email = findViewById(R.id.input_email);
         password = findViewById(R.id.input_password);
         login = findViewById(R.id.btn_login);
-        sign=findViewById(R.id.signup);
+        sign = findViewById(R.id.signup);
         btn_google = findViewById(R.id.btn_google);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -107,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("0147852369", "clicked");
                 signIn();
             }
         });
@@ -126,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                Toast.makeText(this,"" + e, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "" + e, Toast.LENGTH_LONG).show();
             }
         } else {
 
@@ -140,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.i("0147852369", "Done");
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {

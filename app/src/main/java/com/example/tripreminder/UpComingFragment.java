@@ -2,7 +2,11 @@ package com.example.tripreminder;
 
 import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
+import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
+
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -46,6 +50,8 @@ public class UpComingFragment extends Fragment {
     private static int position;
     public static final String TRIP_KEY = null;
     private ProgressDialog pd;
+
+
     public static int jobID = 0;
 
     public int getPosition() {
@@ -60,6 +66,7 @@ public class UpComingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_up_coming, container, false);
+
         rv = view.findViewById(R.id.upcoming_rv);
         pd = new ProgressDialog(getContext());
         pd.setMessage("Please Wait....");
@@ -67,12 +74,11 @@ public class UpComingFragment extends Fragment {
         pd.show();
         trips = new ArrayList<>();
         getTrips();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             adapter = new UpComingAdapter(getContext(), trips);
             rv.setAdapter(adapter);
             rv.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        }else {
+        } else {
             adapter = new UpComingAdapter(getContext(), trips);
             rv.setAdapter(adapter);
             rv.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -136,26 +142,14 @@ public class UpComingFragment extends Fragment {
             @Override
             public void onStartClick(int position, Context context) {
                 Trip t1 = trips.get(position);
-/*
-                ComponentName componentName = new ComponentName(context, MyJobService.class);
-                JobInfo info;
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
-                    info = new JobInfo.Builder(10,componentName)
-                            .setPeriodic(5000)
-                            .build();
-                }else{
-                    info = new JobInfo.Builder(10,componentName)
-                            .setMinimumLatency(5000)
-                            .build();
-                }
-
-                JobScheduler scheduler = (JobScheduler) context.getSystemService(JOB_SCHEDULER_SERVICE);
-                scheduler.schedule(info);*/
+                Intent intent = new Intent(context, BubbleService.class);
+                intent.putExtra("notes", t1.getNotes());
+                context.startService(intent);
                 t1.setState("Done");
                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(t1.getKey()).setValue(t1);
                 trips.remove(position);
                 adapter.notifyItemRemoved(position);
-                context.startService(new Intent(context, WidgetService.class));
+                getActivity().finish();
             }
         });
 
@@ -168,54 +162,66 @@ public class UpComingFragment extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                trips.clear();
-                JobScheduler scheduler = (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
-                scheduler.cancelAll();
-                for (DataSnapshot t : snapshot.getChildren()) {
-                    Trip trip = t.getValue(Trip.class);
-                    if (trip.getState().equals("upcoming")){
+                //if (getActivity() != null && getContext() != null) {
+                try{
+                    trips.clear();
+                    JobScheduler scheduler = (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
+                    scheduler.cancelAll();
+                    for (DataSnapshot t : snapshot.getChildren()) {
+                        Trip trip = t.getValue(Trip.class);
+                        if (trip.getState().equals("upcoming")) {
 
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.YEAR, trip.getDate().getYear());
-                        calendar.set(Calendar.MONTH, trip.getDate().getMonth());
-                        calendar.set(Calendar.DAY_OF_MONTH, trip.getDate().getDate());
-                        calendar.set(Calendar.HOUR_OF_DAY, trip.getDate().getHours());
-                        calendar.set(Calendar.MINUTE, trip.getDate().getMinutes());
-                        calendar.set(Calendar.SECOND, 0);
-                        calendar.set(Calendar.MILLISECOND, 0);
-                        long time = calendar.getTimeInMillis() - System.currentTimeMillis();
-                        if (time > 0){
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(Calendar.YEAR, trip.getDate().getYear());
+                            calendar.set(Calendar.MONTH, trip.getDate().getMonth());
+                            calendar.set(Calendar.DAY_OF_MONTH, trip.getDate().getDate());
+                            calendar.set(Calendar.HOUR_OF_DAY, trip.getDate().getHours());
+                            calendar.set(Calendar.MINUTE, trip.getDate().getMinutes());
+                            calendar.set(Calendar.SECOND, 0);
+                            calendar.set(Calendar.MILLISECOND, 0);
+                            long time = calendar.getTimeInMillis() - System.currentTimeMillis();
 
-                            ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
-                            JobInfo info;
-                            PersistableBundle bundle = new PersistableBundle();
-                            bundle.putString("trip_key", trip.getKey());
-                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
-                                info = new JobInfo.Builder(jobID,componentName)
-                                        .setPeriodic(time)
-                                        .setExtras(bundle)
-                                        .build();
-                            }else{
-                                info = new JobInfo.Builder(jobID,componentName)
-                                        .setMinimumLatency(time)
-                                        .setExtras(bundle)
-                                        .build();
+                            if (time > 0) {
+                                ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
+                                JobInfo info;
+                                PersistableBundle bundle = new PersistableBundle();
+                                bundle.putString("trip_key", trip.getKey());
+                                bundle.putString("trip_repeat", trip.getRepeat());
+                                bundle.putInt("job_id", jobID);
+                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+                                    info = new JobInfo.Builder(jobID, componentName)
+                                            .setPeriodic(time)
+                                            .setExtras(bundle)
+                                            .build();
+                                } else {
+                                    info = new JobInfo.Builder(jobID, componentName)
+                                            .setMinimumLatency(time)
+                                            .setExtras(bundle)
+                                            .build();
+                                }
+                                Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
+
+                                scheduler.schedule(info);
+                                jobID++;
+
+                                trips.add(trip);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                trip.setState("Canceled");
+                                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
+                                Toast.makeText(getContext(), "Time Pass For some Trips", Toast.LENGTH_SHORT).show();
                             }
-                            Log.i("01230123", "Job "+jobID+" added after :  "+time+"  Milliseconds");
 
-                            scheduler.schedule(info);
-                            jobID++;
-                        }else {
-                            trip.setState("Time Pass");
-                            FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
                         }
-
-                        trips.add(trip);
-                        adapter.notifyDataSetChanged();
                     }
+                    pd.dismiss();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Log.i("trycatch0123", e.toString());
                 }
-                pd.dismiss();
+
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -224,3 +230,20 @@ public class UpComingFragment extends Fragment {
 
     }
 }
+/*
+Intent notifyIntent = new Intent(getActivity().getBaseContext(), MyReceiver.class);
+                            notifyIntent.putExtra("trip_key", trip.getKey());
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(System.currentTimeMillis());
+                            calendar.set(Calendar.YEAR, trip.getDate().getYear());
+                            calendar.set(Calendar.MONTH, trip.getDate().getMonth());
+                            calendar.set(Calendar.DAY_OF_MONTH, trip.getDate().getDate());
+                            calendar.set(Calendar.HOUR_OF_DAY, trip.getDate().getHours());
+                            calendar.set(Calendar.MINUTE, trip.getDate().getMinutes());
+                            calendar.set(Calendar.SECOND, 0);
+                            calendar.set(Calendar.MILLISECOND, 0);
+                            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+ */

@@ -8,20 +8,26 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.app.job.JobInfo;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
+import android.os.PersistableBundle;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.util.Calendar;
+
 public class MyJobService extends JobService {
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         String key = jobParameters.getExtras().getString("trip_key");
-        Log.i("01230123", "Job Started");
+        String repeat = jobParameters.getExtras().getString("trip_repeat");
+        int jobID = jobParameters.getExtras().getInt("job_id");
 
         Intent intent = new Intent(this, DialogActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -51,8 +57,6 @@ public class MyJobService extends JobService {
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(NOTIFICATION_ID, builder.build());
-
-
         return false;
     }
 
@@ -60,7 +64,6 @@ public class MyJobService extends JobService {
     public boolean onStopJob(JobParameters jobParameters) {
         return false;
     }
-
 
 }
 /*
