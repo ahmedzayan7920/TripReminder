@@ -57,6 +57,8 @@ public class MyJobService extends JobService {
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(NOTIFICATION_ID, builder.build());
+
+
         return false;
     }
 
