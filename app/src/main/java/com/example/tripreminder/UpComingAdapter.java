@@ -20,7 +20,6 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(int position, Context context);
         void onMenuClick(int position, View v, Context context);
         void onNoteClick(int position, Context context);
         void onStartClick(int position, Context context);
@@ -54,17 +53,6 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
             ivNote = itemView.findViewById(R.id.iv_note);
             btnStart = itemView.findViewById(R.id.btn_start);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null){
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
-                            listener.onItemClick(position, context);
-                        }
-                    }
-                }
-            });
 
             ivMenu.setOnClickListener(new View.OnClickListener() {
                 @Override

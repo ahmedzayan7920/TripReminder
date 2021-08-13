@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">TripReminder</string>
+
+    <string name="navigation_drawer_open">افتح القائمة الجانبية</string>
+    <string name="navigation_drawer_close">اغلق القائمة الجانبية</string>
+    <string name="Register"> جديد تسجيل</string>
+    <string name="LOGIN">تسجيل الدخول</string>
+    <string name="ForgetPasssword">نسيت كلمة السر</string>
+    <string name="Google">جوجل</string>
+    <string name="TripName">اسم الرحلة</string>
+    <string name="startPoint">نقطة البداية</string>
+    <string name="endPoint">نقطة النهاية</string>
+    <string name="startDetails">تاريخ ووقت البداية</string>
+    <string name="addTrip">اضافة رحلة</string>
+    <string name="apiKey">AIzaSyCW_X5xn8RMYkRpAnZt_OEx1UAZgCpOVMM</string>
+    <string name="notes">ملاجظات</string>
+    <string name="addNote">List Item</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="search">بحث</string>
+    <string name="title_activity_notes">NotesActivity</string>
+    <string name="messages_header">الرسالة</string>
+    <string name="sync_header">مزامنة</string>
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="first_fragment_label">الواجهة الاولي</string>
+    <string name="second_fragment_label">الواجهة الثانية</string>
+    <string name="next">التالي</string>
+    <string name="previous">السابق</string>
+    <string name="trip_start_point">نقطة البداية</string>
+    <string name="date_picker">اختيار التاريخ</string>
+    <string name="trip_time">Trip Time</string>
+    <string name="time_picker">اختيار الوقت</string>
+    <string name="trip_notes">الملاحظات</string>
+    <string name="trip_end_point">نقطة النهاية</string>
+    <string name="trip_date">تاريخ الرحلة</string>
+    <string name="trip_name">اسم الرحلة</string>
+    <string name="cancel">الغاء</string>
+    <string name="later">لاحقا</string>
+    <string name="name">الاسم</string>
+    <string name="email">البريد الالكتروني</string>
+    <string name="password">كلمة المرور</string>
+    <string name="confirm_password">تاكيد كلمة المرور</string>
+    <string name="already_have_an_account">هل لديك حساب؟</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="starting_image">صورة البداية</string>
+    <string name="profile_image">الصورة الشخصية</string>
+    <string name="direction_arrow">الاتجاة</string>
+    <string name="show_notes">عرض الملاحظات</string>
+    <string name="delete_trip">امسح الرحلة</string>
+    <string name="start">بداية</string>
+    <string name="settings">الاعدادات</string>
+</resources>

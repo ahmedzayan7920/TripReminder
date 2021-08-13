@@ -3,10 +3,7 @@
 
     <string name="navigation_drawer_open">Open Navigation drawer</string>
     <string name="navigation_drawer_close">Close Navigation drawer</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Register">Register</string>
-    <string name="Login" />
     <string name="LOGIN">Login</string>
     <string name="ForgetPasssword">ForgetPasssword</string>
     <string name="Google">Google</string>
@@ -17,32 +14,45 @@
     <string name="addTrip">Add Trip</string>
     <string name="apiKey">AIzaSyCW_X5xn8RMYkRpAnZt_OEx1UAZgCpOVMM</string>
     <string name="notes">Notes</string>
-    <string name="sdfa" />
+
     <string name="addNote">List Item</string>
     <string name="title_activity_maps">Map</string>
     <string name="search">Search</string>
     <string name="title_activity_notes">NotesActivity</string>
-
-    <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="trip_start_point">Trip Start Point</string>
+    <string name="date_picker">Date Picker</string>
+    <string name="trip_time">Trip Time</string>
+    <string name="time_picker">Time Picker</string>
+    <string name="trip_notes">Trip Notes</string>
+    <string name="trip_end_point">Trip End Point</string>
+    <string name="trip_date">Trip Date</string>
+    <string name="trip_name">Trip Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="later">Later</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_have_an_account">Already Have an Account?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="starting_image">Starting Image</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="direction_arrow">Direction Arrow</string>
+    <string name="show_notes">Show Notes</string>
+    <string name="delete_trip">Delete Trip</string>
+    <string name="start">Start</string>
+    <string name="settings">Settings</string>
 </resources>

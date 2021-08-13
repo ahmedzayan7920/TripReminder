@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,14 +58,22 @@ public class DialogActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
-
-        if (flag) {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-            flag = false;
+        Log.i("0174469630", "create");
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            if (flag) {
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                flag = false;
+            }
+        } else {
+            if (flag) {
+                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                flag = false;
+            }
         }
 
 
-        Log.i("01230123", "Dialog Shown");
         allDate = new Date();
         String key = getIntent().getStringExtra("key");
         getTrip(key);
@@ -106,31 +117,31 @@ public class DialogActivity extends AppCompatActivity {
                 r.stop();
                 NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(NOTIFICATION_ID);
-                if (tr.getWay().equals("One way Trip")){
-                    Intent intent = new Intent(DialogActivity.this, BubbleService.class);
+                if (tr.getWay().equals("One way Trip")) {
+                    Intent intent = new Intent(getApplicationContext(), BubbleService.class);
                     intent.putExtra("notes", tr.getNotes());
                     startService(intent);
                     if (ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                         String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                        ActivityCompat.requestPermissions(DialogActivity.this, permissions,101);
+                        ActivityCompat.requestPermissions(DialogActivity.this, permissions, 101);
                     }
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+tr.getEnd());
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + tr.getEnd());
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
                     tr.setState("Done");
                     FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
                     finish();
-                }else {
+                } else {
                     String[] notes = {"set Date", "Set Time"};
                     AlertDialog.Builder builder = new AlertDialog.Builder(DialogActivity.this);
                     builder.setTitle("Set Round Time")
                             .setItems(notes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (i == 0){
+                                    if (i == 0) {
                                         Calendar c = Calendar.getInstance();
                                         int day = c.get(Calendar.DAY_OF_MONTH);
                                         int month = c.get(Calendar.MONTH);
@@ -147,7 +158,7 @@ public class DialogActivity extends AppCompatActivity {
                                             }
                                         }, year, month, day);
                                         d.show();
-                                    } else if (i == 1){
+                                    } else if (i == 1) {
                                         Calendar c = Calendar.getInstance();
                                         int hour = c.get(Calendar.HOUR_OF_DAY);
                                         int minute = c.get(Calendar.MINUTE);
@@ -165,31 +176,31 @@ public class DialogActivity extends AppCompatActivity {
                                 }
 
                             }).setPositiveButton("Save and Start", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    String start = tr.getStart();
-                                    String end = tr.getEnd();
-                                    tr.setStart(tr.getEnd());
-                                    tr.setEnd(start);
-                                    tr.setDate(allDate);
-                                    tr.setWay("One way Trip");
-                                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
-                                    if (ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                            && ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String start = tr.getStart();
+                            String end = tr.getEnd();
+                            tr.setStart(tr.getEnd());
+                            tr.setEnd(start);
+                            tr.setDate(allDate);
+                            tr.setWay("One way Trip");
+                            FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
+                            if (ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                                    && ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                                        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                                        ActivityCompat.requestPermissions(DialogActivity.this, permissions,101);
-                                    }
-                                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+end);
-                                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                                    mapIntent.setPackage("com.google.android.apps.maps");
-                                    startActivity(mapIntent);
-                                    Intent intent = new Intent(DialogActivity.this, BubbleService.class);
-                                    intent.putExtra("notes", tr.getNotes());
-                                    startService(intent);
-                                    finish();
-                                }
-                            }).show();
+                                String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+                                ActivityCompat.requestPermissions(DialogActivity.this, permissions, 101);
+                            }
+                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + end);
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+                            startActivity(mapIntent);
+                            Intent intent = new Intent(getApplicationContext(), BubbleService.class);
+                            intent.putExtra("notes", tr.getNotes());
+                            startService(intent);
+                            finish();
+                        }
+                    }).show();
                 }
             }
         });
@@ -215,5 +226,35 @@ public class DialogActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("0174469630", "pause");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("0174469630", "start");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("0174469630", "stop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("0174469630", "destroy");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("0174469630", "resume");
     }
 }

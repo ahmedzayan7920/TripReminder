@@ -1,6 +1,8 @@
 package com.example.tripreminder;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -45,17 +47,43 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onShowNotesClick(int position) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Notes")
-                        .setMessage(trips.get(position).getNotes())
-                        .show();
+                if (!trips.get(position).getNotes().isEmpty()){
+                    builder.setTitle("Notes")
+                            .setMessage(trips.get(position).getNotes())
+                            .show();
+                }else{
+                    builder.setTitle("Notes")
+                            .setMessage("No Notes for This Trip")
+                            .show();
+                }
             }
 
             @Override
             public void onDeleteClick(int position) {
                 String key = trips.get(position).getKey();
-                trips.remove(position);
-                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
-                adapter.notifyItemRemoved(position);
+                AlertDialog.Builder alert = new AlertDialog.Builder(
+                        getContext());
+                alert.setTitle("Deleting Alert!!");
+                alert.setMessage("Are you sure !!!!");
+                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        trips.remove(position);
+                        FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
+                        adapter.notifyItemRemoved(position);
+                        dialog.dismiss();
+                    }
+                });
+                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+
             }
         });
 

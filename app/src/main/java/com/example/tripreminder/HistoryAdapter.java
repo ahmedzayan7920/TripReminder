@@ -23,7 +23,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
 
     public interface OnItemClickListener {
         void onShowNotesClick(int position);
-
         void onDeleteClick(int position);
     }
 
@@ -38,6 +37,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
         TextView tvState;
         TextView tvStart;
         TextView tvDestination;
+        TextView tvExpand;
         Button btnShowNotes;
         Button btnDelete;
         CardView cv;
@@ -51,6 +51,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
             tvState = itemView.findViewById(R.id.tv_state2);
             tvStart = itemView.findViewById(R.id.tv_start2);
             tvDestination = itemView.findViewById(R.id.tv_destination2);
+            tvExpand = itemView.findViewById(R.id.tv_expand);
             cv = itemView.findViewById(R.id.card_view);
             ll = itemView.findViewById(R.id.expand);
 
@@ -87,7 +88,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
                     Trip trip = trips.get(getAdapterPosition());
                     trip.setExpand(!trip.isExpand());
                     notifyItemChanged(getAdapterPosition());
-                    Toast.makeText(v.getContext(), getAdapterPosition() + "" + trips.get(getAdapterPosition()).isExpand() + "", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -122,8 +122,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
         boolean expand = trips.get(position).isExpand();
         if (expand) {
             holder.ll.setVisibility(View.VISIBLE);
+            holder.tvExpand.setText("UnExpand");
         } else {
             holder.ll.setVisibility(View.GONE);
+            holder.tvExpand.setText("Expand");
         }
     }
 

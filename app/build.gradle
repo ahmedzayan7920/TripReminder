@@ -14,6 +14,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        renderscriptTargetApi 31 //must match target sdk and build tools
+        renderscriptSupportModeEnabled true
     }
 
     buildTypes {
@@ -54,4 +56,6 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
     implementation 'com.siddharthks.bubbles:bubbles:1.0.0'
+
+
 }

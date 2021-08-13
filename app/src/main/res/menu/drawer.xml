@@ -22,10 +22,6 @@
     <item android:title="Other">
         <menu>
             <item
-                android:id="@+id/drawer_sync"
-                android:icon="@drawable/ic_sync"
-                android:title="Sync" />
-            <item
                 android:id="@+id/drawer_Logout"
                 android:icon="@drawable/ic_exit"
                 android:title="Logout" />

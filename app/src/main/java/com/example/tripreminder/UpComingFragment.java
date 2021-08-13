@@ -82,6 +82,7 @@ public class UpComingFragment extends Fragment {
         pd = new ProgressDialog(getContext());
         pd.setMessage("Please Wait....");
         pd.setCancelable(false);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pd.show();
         trips = new ArrayList<>();
         getTrips();
@@ -96,11 +97,6 @@ public class UpComingFragment extends Fragment {
         }
         adapter.notifyDataSetChanged();
         adapter.setOnItemClickListener(new UpComingAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position, Context context) {
-                Toast.makeText(getContext(), "Clicked on " + (position + 1), Toast.LENGTH_SHORT).show();
-            }
-
             @Override
             public void onMenuClick(int position, View v, Context context) {
                 setPosition(position);
@@ -117,9 +113,29 @@ public class UpComingFragment extends Fragment {
                                 return true;
                             case R.id.mi_delete:
                                 String key = trips.get(getPosition()).getKey();
-                                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
-                                trips.remove(getPosition());
-                                adapter.notifyItemRemoved(getPosition());
+                                AlertDialog.Builder alert = new AlertDialog.Builder(
+                                        getContext());
+                                alert.setTitle("Deleting Alert!!");
+                                alert.setMessage("Are you sure !!!!");
+                                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
+                                        trips.remove(getPosition());
+                                        adapter.notifyItemRemoved(getPosition());
+                                        dialog.dismiss();
+                                    }
+                                });
+                                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                alert.show();
+
                                 return true;
                         }
                         return false;
@@ -132,22 +148,15 @@ public class UpComingFragment extends Fragment {
             @Override
             public void onNoteClick(int position, Context context) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Notes")
-                        .setMessage(trips.get(position).getNotes())
-                        .show();
-
-                /*
-                String[] notes = {"ahmed", "mohamed", "zayan"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Notes")
-                        .setItems(notes, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-
-                        }).show();*/
+                if (!trips.get(position).getNotes().isEmpty()){
+                    builder.setTitle("Notes")
+                            .setMessage(trips.get(position).getNotes())
+                            .show();
+                }else{
+                    builder.setTitle("Notes")
+                            .setMessage("No Notes for This Trip")
+                            .show();
+                }
             }
 
             @Override
@@ -281,7 +290,6 @@ public class UpComingFragment extends Fragment {
                                 PersistableBundle bundle = new PersistableBundle();
                                 bundle.putString("trip_key", trip.getKey());
                                 bundle.putString("trip_repeat", trip.getRepeat());
-                                bundle.putInt("job_id", jobID);
                                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
                                     info = new JobInfo.Builder(jobID, componentName)
                                             .setPeriodic(time)
@@ -293,6 +301,7 @@ public class UpComingFragment extends Fragment {
                                             .setExtras(bundle)
                                             .build();
                                 }
+
                                 Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
 
                                 scheduler.schedule(info);
@@ -301,17 +310,15 @@ public class UpComingFragment extends Fragment {
                                 trips.add(trip);
                                 adapter.notifyDataSetChanged();
                             } else {
-                                trip.setState("Canceled");
+                                trip.setState("Time passed");
                                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
                                 Toast.makeText(getContext(), "Time Pass For some Trips", Toast.LENGTH_SHORT).show();
                             }
-
                         }
                     }
                     pd.dismiss();
                 }catch (Exception e){
                     e.printStackTrace();
-                    Log.i("trycatch0123", e.toString());
                 }
 
             }

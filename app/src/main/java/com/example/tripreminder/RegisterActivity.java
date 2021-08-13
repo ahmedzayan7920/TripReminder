@@ -1,6 +1,7 @@
 package com.example.tripreminder;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -71,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     });
                                 } else {
-                                    Toast.makeText(RegisterActivity.this, "error!!!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, "Error!!!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
 
                             }

@@ -6,13 +6,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ff9541"
+    android:background="#29A89C"
     tools:context=".AddAndEdit">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingTop="30dp">
+
         <Button
             android:id="@+id/addTrip"
             android:layout_width="wrap_content"
@@ -23,7 +24,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.454"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TextContrastCheck" />
 
         <TextView
             android:id="@+id/add_tv_time"
@@ -32,11 +34,14 @@
             android:layout_marginEnd="44dp"
             android:layout_marginBottom="24dp"
             android:ems="10"
+            android:gravity="center"
+            android:hint="@string/trip_time"
             android:inputType="time"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D8C9C9"
             app:layout_constraintBottom_toTopOf="@+id/trip"
             app:layout_constraintEnd_toEndOf="parent"
-            android:hint="Trip Time"
-            android:gravity="center"/>
+            tools:ignore="TextContrastCheck,TextViewEdits,TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/startDetails"
@@ -44,45 +49,50 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:text="@string/startDetails"
+            android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#000000"
             app:layout_constraintBottom_toTopOf="@+id/iv_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.1"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TextContrastCheck" />
 
         <ImageView
             android:id="@+id/iv_date"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="80dp"
-            android:layout_marginLeft="80dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toTopOf="@+id/add_tv_date"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/calendar" />
+            app:srcCompat="@drawable/schedule"
+            tools:ignore="ImageContrastCheck"
+            android:contentDescription="@string/date_picker" />
 
         <ImageView
             android:id="@+id/iv_time"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:contentDescription="@string/time_picker"
             app:layout_constraintBottom_toTopOf="@+id/add_tv_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.616"
             app:layout_constraintStart_toEndOf="@+id/iv_date"
             app:layout_constraintTop_toTopOf="@+id/iv_date"
             app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@drawable/clock" />
+            app:srcCompat="@drawable/time"
+            tools:ignore="ImageContrastCheck" />
 
         <Spinner
             android:id="@+id/trip"
             android:layout_width="163dp"
             android:layout_height="46dp"
             android:layout_marginEnd="28dp"
-            android:layout_marginRight="28dp"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="@+id/repeat"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         <Spinner
             android:id="@+id/repeat"
@@ -92,7 +102,8 @@
             app:layout_constraintBottom_toTopOf="@+id/notes"
             app:layout_constraintEnd_toStartOf="@+id/trip"
             app:layout_constraintHorizontal_bias="0.561"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/add_tv_date"
@@ -100,35 +111,34 @@
             android:layout_height="40dp"
             android:layout_marginBottom="24dp"
             android:ems="10"
+            android:gravity="center"
+            android:hint="@string/trip_date"
             android:inputType="date"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D8C9C9"
             app:layout_constraintBottom_toTopOf="@+id/repeat"
             app:layout_constraintEnd_toStartOf="@+id/add_tv_time"
             app:layout_constraintHorizontal_bias="0.457"
             app:layout_constraintStart_toStartOf="parent"
-            android:hint="Trip Date"
-            android:gravity="center"/>
+            tools:ignore="TextViewEdits,TouchTargetSizeCheck,TextContrastCheck" />
 
-        <!--    <AutoCompleteTextView-->
-        <!--        android:id="@+id/endTxt"-->
-        <!--        android:layout_width="319dp"-->
-        <!--        android:layout_height="54dp"-->
-        <!--        android:layout_marginBottom="24dp"-->
-        <!--        android:drawableLeft="@drawable/ic_baseline_location_on_24"-->
-        <!--        app:layout_constraintBottom_toTopOf="@+id/startDetails"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintHorizontal_bias="0.423"-->
-        <!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-        <EditText android:id="@+id/et_end"
+        <EditText
+            android:id="@+id/et_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:autofillHints="@string/trip_end_point"
+            android:hint="@string/trip_end_point"
+            android:inputType="textAutoCorrect|textAutoComplete"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D8C9C9"
             app:layout_constraintBottom_toTopOf="@+id/startDetails"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.453"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:hint="Trip End Point"/>
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:id="@+id/endPoint"
@@ -136,24 +146,31 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="@string/endPoint"
+            android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/et_end"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.096"
             app:layout_constraintStart_toStartOf="parent"
-            android:textColor="#000000" />
+            tools:ignore="TextContrastCheck" />
 
-        <EditText android:id="@+id/et_start"
+        <EditText
+            android:id="@+id/et_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:autofillHints="@string/trip_start_point"
+            android:hint="@string/trip_start_point"
+            android:inputType="textAutoCorrect|textAutoComplete"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D8C9C9"
             app:layout_constraintBottom_toTopOf="@+id/endPoint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.423"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:hint="Trip Start Point"/>
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <TextView
             android:id="@+id/tripName"
@@ -162,64 +179,75 @@
             android:layout_marginBottom="13dp"
             android:gravity="center"
             android:text="@string/TripName"
+            android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#000000"
             app:layout_constraintBottom_toTopOf="@+id/et_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.107"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TextContrastCheck" />
 
         <TextView
             android:id="@+id/startPoint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/startPoint"
+            android:textColor="#ffffff"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#000000"
 
             app:layout_constraintBottom_toTopOf="@+id/et_start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.098"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TextContrastCheck" />
 
         <TextView
             android:id="@+id/notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notes"
+            android:textColor="#ffffff"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#000000"
 
             app:layout_constraintBottom_toTopOf="@+id/note"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.112"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="TextContrastCheck" />
 
         <EditText
             android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginBottom="24dp"
+            android:autofillHints="@string/trip_name"
+            android:hint="@string/trip_name"
+            android:inputType="text"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D8C9C9"
             app:layout_constraintBottom_toTopOf="@+id/startPoint"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.201"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:hint="Trip Name"/>
+            tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck,TextContrastCheck" />
 
         <MultiAutoCompleteTextView
             android:id="@+id/note"
             android:layout_width="279dp"
             android:layout_height="98dp"
+            android:gravity="center"
+            android:hint="@string/trip_notes"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#D8C9C9"
             app:layout_constraintBottom_toTopOf="@+id/addTrip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:hint="Trip Notes"
-            android:gravity="center"/>
+            tools:ignore="TextContrastCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

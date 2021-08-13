@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "Please Verify your Email", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(LoginActivity.this, "error!!!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Error!!!" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -108,7 +108,6 @@ public class LoginActivity extends AppCompatActivity {
         btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("0147852369", "clicked");
                 signIn();
             }
         });
@@ -128,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                Toast.makeText(this, "" + e, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Error!!!" + e, Toast.LENGTH_LONG).show();
             }
         } else {
 
@@ -142,11 +141,10 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.i("0147852369", "Done");
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(LoginActivity.this, "aaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Error!!!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

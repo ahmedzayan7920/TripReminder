@@ -30,6 +30,7 @@ public class Trip {
         this.notes = notes;
         this.way = way;
         this.repeat = repeat;
+        this.expand = false;
     }
 
     public Date getDate() {

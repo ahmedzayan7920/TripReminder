@@ -3,14 +3,7 @@ package com.example.tripreminder;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,24 +17,17 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.Autocomplete;
-import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,7 +47,6 @@ public class AddAndEdit extends AppCompatActivity {
     String end;
     Date allDate;
     Trip trip;
-    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -84,49 +69,56 @@ public class AddAndEdit extends AppCompatActivity {
         repeat = findViewById(R.id.repeat);
 
         String key = getIntent().getStringExtra(UpComingFragment.TRIP_KEY);
-        if (key == null) {
+        if (key != null) {
+            FirebaseDatabase.getInstance().getReference("Trips").child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child(key)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            trip = snapshot.getValue(Trip.class);
+                            if (trip != null){
+                                etName.setText(trip.getName());
+                                etStart.setText(trip.getStart());
+                                etEnd.setText(trip.getEnd());
+                                if (trip.getWay().contains("One")) {
+                                    way.setSelection(0);
+                                } else {
+                                    way.setSelection(1);
+                                }
 
-        } else {
-            FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    trip = snapshot.getValue(Trip.class);
-                    etName.setText(trip.getName());
-                    etStart.setText(trip.getStart());
-                    etEnd.setText(trip.getEnd());
-                    if (trip.getWay().contains("One")) {
-                        way.setSelection(0);
-                    } else {
-                        way.setSelection(1);
-                    }
+                                switch (trip.getRepeat()) {
+                                    case "Daily":
+                                        repeat.setSelection(1);
+                                        break;
+                                    case "Weekly":
+                                        repeat.setSelection(2);
+                                        break;
+                                    case "Monthly":
+                                        repeat.setSelection(3);
+                                        break;
+                                    default:
+                                        repeat.setSelection(0);
+                                        break;
+                                }
+                                tvDate.setText(trip.getDate().getYear() + "/" + (trip.getDate().getMonth() + 1) + "/" + trip.getDate().getDate());
+                                allDate.setYear(trip.getDate().getYear());
+                                allDate.setMonth(trip.getDate().getMonth());
+                                allDate.setDate(trip.getDate().getDate());
 
-                    if (trip.getRepeat().equals("Daily")) {
-                        repeat.setSelection(1);
-                    } else if (trip.getRepeat().equals("Weekly")) {
-                        repeat.setSelection(2);
-                    } else if (trip.getRepeat().equals("Monthly")) {
-                        repeat.setSelection(3);
-                    } else {
-                        repeat.setSelection(0);
-                    }
-                    tvDate.setText(trip.getDate().getYear() + "/" + (trip.getDate().getMonth() + 1) + "/" + trip.getDate().getDate());
-                    allDate.setYear(trip.getDate().getYear());
-                    allDate.setMonth(trip.getDate().getMonth());
-                    allDate.setDate(trip.getDate().getDate());
+                                tvTime.setText(trip.getDate().getHours() + ":" + trip.getDate().getMinutes());
+                                allDate.setHours(trip.getDate().getHours());
+                                allDate.setMinutes(trip.getDate().getMinutes());
 
-                    tvTime.setText(trip.getDate().getHours() + ":" + trip.getDate().getMinutes());
-                    allDate.setHours(trip.getDate().getHours());
-                    allDate.setMinutes(trip.getDate().getMinutes());
+                                notes.setText(trip.getNotes());
+                            }
 
-                    notes.setText(trip.getNotes());
 
-                }
+                        }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
+                        }
+                    });
         }
         List<String> listRepeat = new ArrayList<>();
         listRepeat.add("No Repeated");
@@ -233,37 +225,6 @@ public class AddAndEdit extends AppCompatActivity {
                         String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
                         Trip t = new Trip(allDate, name, "upcoming", start, end, key, n, w, r);
                         FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(t);
-/*
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.YEAR, t.getDate().getYear());
-                        calendar.set(Calendar.MONTH, t.getDate().getMonth());
-                        calendar.set(Calendar.DAY_OF_MONTH, t.getDate().getDate());
-                        calendar.set(Calendar.HOUR_OF_DAY, t.getDate().getHours());
-                        calendar.set(Calendar.MINUTE, t.getDate().getMinutes());
-                        calendar.set(Calendar.SECOND, 0);
-                        calendar.set(Calendar.MILLISECOND, 0);
-                        long time = calendar.getTimeInMillis() - System.currentTimeMillis();
-                        Log.i("01230123", "Job added after :  "+time+"  Milliseconds");
-                        ComponentName componentName = new ComponentName(getBaseContext(), MyJobService.class);
-                        JobInfo info;
-                        PersistableBundle bundle = new PersistableBundle();
-                        bundle.putString("trip_key", key);
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
-                            info = new JobInfo.Builder(10,componentName)
-                                    .setPeriodic(time)
-                                    .setExtras(bundle)
-                                    .build();
-                        }else{
-                            info = new JobInfo.Builder(10,componentName)
-                                    .setMinimumLatency(time)
-                                    .setExtras(bundle)
-                                    .build();
-                        }
-
-                        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-                        scheduler.schedule(info);
-
-*/
                         finish();
                     } else {
                         name = etName.getText().toString();
@@ -275,35 +236,6 @@ public class AddAndEdit extends AppCompatActivity {
 
                         Trip t = new Trip(allDate, name, "upcoming", start, end, key, n, w, r);
                         FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(t);
-/*
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.set(Calendar.YEAR, t.getDate().getYear());
-                        calendar.set(Calendar.MONTH, t.getDate().getMonth());
-                        calendar.set(Calendar.DAY_OF_MONTH, t.getDate().getDate());
-                        calendar.set(Calendar.HOUR_OF_DAY, t.getDate().getHours());
-                        calendar.set(Calendar.MINUTE, t.getDate().getMinutes());
-                        calendar.set(Calendar.SECOND, 0);
-                        calendar.set(Calendar.MILLISECOND, 0);
-                        long time = calendar.getTimeInMillis() - System.currentTimeMillis();
-                        Log.i("01230123", "Job added after :  "+time+"  Milliseconds");
-                        ComponentName componentName = new ComponentName(getBaseContext(), MyJobService.class);
-                        JobInfo info;
-                        PersistableBundle bundle = new PersistableBundle();
-                        bundle.putString("trip_key", key);
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N){
-                            info = new JobInfo.Builder(10,componentName)
-                                    .setPeriodic(time)
-                                    .setExtras(bundle)
-                                    .build();
-                        }else{
-                            info = new JobInfo.Builder(10,componentName)
-                                    .setMinimumLatency(time)
-                                    .setExtras(bundle)
-                                    .build();
-                        }
-
-                        JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-                        scheduler.schedule(info);*/
                         finish();
                     }
                 } else {

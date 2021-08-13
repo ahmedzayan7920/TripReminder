@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             flag = false;
         }
 
-        Log.i("0147852369", "Opened");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
         navigationView.setCheckedItem(R.id.drawer_upcoming);
 
@@ -106,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
                         navigationView.setCheckedItem(R.id.drawer_history);
                         toolbar.setTitle("History");
                         toolbar.getMenu().getItem(0).setVisible(false);
-                        break;
-                    case R.id.drawer_sync:
-                        Toast.makeText(getApplicationContext(), "Sync Clicked", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.drawer_Logout:
                         FirebaseAuth.getInstance().signOut();
