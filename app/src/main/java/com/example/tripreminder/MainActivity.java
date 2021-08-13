@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.main_add);
+        menu.findItem(R.id.main_map);
         return true;
     }
 
@@ -140,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_add:
                 Intent intent = new Intent(getBaseContext(), AddAndEdit.class);
                 startActivity(intent);
+                return true;
+            case R.id.main_map:
+                startActivity(new Intent(MainActivity.this , MapsActivity.class));
                 return true;
         }
         return false;

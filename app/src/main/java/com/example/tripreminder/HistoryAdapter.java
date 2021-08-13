@@ -7,14 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
-import java.util.Calendar;
+
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripViewHolder> {
     private Context context;
