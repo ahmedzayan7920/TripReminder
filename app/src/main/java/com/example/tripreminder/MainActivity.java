@@ -1,5 +1,16 @@
 package com.example.tripreminder;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -9,25 +20,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 
@@ -56,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             flag = false;
         }
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
-        navigationView.setCheckedItem(R.id.drawer_upcoming);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("UpComing");
+        setSupportActionBar(toolbar);
 
         tvUserName = view.findViewById(R.id.tv_user_name);
         tvUserEmail = view.findViewById(R.id.tv_user_email);
@@ -74,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("UpComing");
-        setSupportActionBar(toolbar);
+
 
 
         tvUserName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
@@ -89,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        if (savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
+            navigationView.setCheckedItem(R.id.drawer_upcoming);
+            toolbar.setTitle("UpComing");
+        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -131,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.main_add);
-        menu.findItem(R.id.main_map);
         return true;
     }
 
@@ -141,9 +137,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_add:
                 Intent intent = new Intent(getBaseContext(), AddAndEdit.class);
                 startActivity(intent);
-                return true;
-            case R.id.main_map:
-                startActivity(new Intent(MainActivity.this , MapsActivity.class));
                 return true;
         }
         return false;
