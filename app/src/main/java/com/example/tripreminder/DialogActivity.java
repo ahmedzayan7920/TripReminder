@@ -1,6 +1,7 @@
 package com.example.tripreminder;
 
 import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
+import static com.example.tripreminder.MainActivity.flag;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -13,8 +14,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +22,11 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +35,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class DialogActivity extends AppCompatActivity {
 
@@ -47,31 +47,20 @@ public class DialogActivity extends AppCompatActivity {
 
     private Trip tr;
 
-    private Date allDate;
+    private Calendar allDate;
 
-    static boolean flag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
         Log.i("0174469630", "create");
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
             if (flag) {
                 FirebaseDatabase.getInstance().setPersistenceEnabled(true);
                 flag = false;
             }
-        } else {
-            if (flag) {
-                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                flag = false;
-            }
-        }
 
-
-        allDate = new Date();
+        allDate = Calendar.getInstance();
         String key = getIntent().getStringExtra("key");
         getTrip(key);
         try {
@@ -147,9 +136,9 @@ public class DialogActivity extends AppCompatActivity {
                                         DatePickerDialog d = new DatePickerDialog(DialogActivity.this, new DatePickerDialog.OnDateSetListener() {
                                             @Override
                                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                                                allDate.setYear(i);
-                                                allDate.setMonth(i1);
-                                                allDate.setDate(i2);
+                                                allDate.set(Calendar.YEAR, i);
+                                                allDate.set(Calendar.MONTH, i1);
+                                                allDate.set(Calendar.DAY_OF_MONTH, i2);
                                                 notes[0] += "     Done";
                                                 builder.show();
                                             }
@@ -162,8 +151,8 @@ public class DialogActivity extends AppCompatActivity {
                                         TimePickerDialog t = new TimePickerDialog(DialogActivity.this, new TimePickerDialog.OnTimeSetListener() {
                                             @Override
                                             public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                                allDate.setHours(i);
-                                                allDate.setMinutes(i1);
+                                                allDate.set(Calendar.HOUR_OF_DAY, i);
+                                                allDate.set(Calendar.MINUTE, i1);
                                                 notes[1] += "     Done";
                                                 builder.show();
                                             }
@@ -204,14 +193,29 @@ public class DialogActivity extends AppCompatActivity {
 
     }
 
-    private void getTrip(String key) {
+    private void getTrip(String k) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot t : snapshot.getChildren()) {
-                    Trip trip = t.getValue(Trip.class);
-                    if (trip.getKey().equals(key)) {
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.YEAR, t.child("date").child("weekYear").getValue(Integer.class));
+                    c.set(Calendar.MONTH, t.child("date").child("time").child("month").getValue(Integer.class));
+                    c.set(Calendar.DAY_OF_MONTH, t.child("date").child("time").child("date").getValue(Integer.class));
+                    c.set(Calendar.HOUR_OF_DAY, t.child("date").child("time").child("hours").getValue(Integer.class));
+                    c.set(Calendar.MINUTE, t.child("date").child("time").child("minutes").getValue(Integer.class));
+                    c.set(Calendar.SECOND, t.child("date").child("time").child("seconds").getValue(Integer.class));
+                    String end = (String) t.child("end").getValue();
+                    String key = (String) t.child("key").getValue();
+                    String name = (String) t.child("name").getValue();
+                    String notes = (String) t.child("notes").getValue();
+                    String repeat = (String) t.child("repeat").getValue();
+                    String start = (String) t.child("start").getValue();
+                    String state = (String) t.child("state").getValue();
+                    String way = (String) t.child("way").getValue();
+                    Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
+                    if (key.equals(k)) {
                         tr = trip;
                         tvName.setText(tr.getName());
                     }
@@ -223,35 +227,5 @@ public class DialogActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i("0174469630", "pause");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("0174469630", "start");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.i("0174469630", "stop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("0174469630", "destroy");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i("0174469630", "resume");
     }
 }

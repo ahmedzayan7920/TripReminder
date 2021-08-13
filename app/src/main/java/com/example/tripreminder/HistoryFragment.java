@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class HistoryFragment extends Fragment {
     private RecyclerView rv2;
@@ -103,7 +104,21 @@ public class HistoryFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 trips.clear();
                 for (DataSnapshot t : snapshot.getChildren()) {
-                    Trip trip = t.getValue(Trip.class);
+                    Calendar c = Calendar.getInstance();
+                    c.set(Calendar.YEAR, t.child("date").child("weekYear").getValue(Integer.class));
+                    c.set(Calendar.MONTH, t.child("date").child("time").child("month").getValue(Integer.class));
+                    c.set(Calendar.DAY_OF_MONTH, t.child("date").child("time").child("date").getValue(Integer.class));
+                    c.set(Calendar.HOUR_OF_DAY, t.child("date").child("time").child("hours").getValue(Integer.class));
+                    c.set(Calendar.MINUTE, t.child("date").child("time").child("minutes").getValue(Integer.class));
+                    String end = (String) t.child("end").getValue();
+                    String key = (String) t.child("key").getValue();
+                    String name = (String) t.child("name").getValue();
+                    String notes = (String) t.child("notes").getValue();
+                    String repeat = (String) t.child("repeat").getValue();
+                    String start = (String) t.child("start").getValue();
+                    String state = (String) t.child("state").getValue();
+                    String way = (String) t.child("way").getValue();
+                    Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
                     if (trip.getState().equals("upcoming")) {
 
                     } else {

@@ -106,13 +106,26 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
         Trip t = trips.get(position);
-        int year = t.getDate().getYear();
-        int month = t.getDate().getMonth();
-        int day = t.getDate().getDate();
-        int hour = t.getDate().getHours();
-        int minute = t.getDate().getMinutes();
+        int year = t.getDate().get(Calendar.YEAR);
+        int month = t.getDate().get(Calendar.MONTH);
+        int day = t.getDate().get(Calendar.DAY_OF_MONTH);
+        int hour = t.getDate().get(Calendar.HOUR_OF_DAY);
+        int minute = t.getDate().get(Calendar.MINUTE);
         holder.tvDate.setText(day+"/"+(month+1)+"/"+year);
-        holder.tvTime.setText(hour+":"+minute);
+        if (hour >= 13){
+            if (minute >= 10){
+                holder.tvTime.setText((hour-12) + ":" + minute + " pm");
+            }else{
+                holder.tvTime.setText((hour-12) + ":" + "0"+minute + " pm");
+            }
+
+        }else {
+            if (minute >= 10){
+                holder.tvTime.setText((hour) + ":" + minute + " am");
+            }else{
+                holder.tvTime.setText((hour) + ":" + "0"+minute + " am");
+            }
+        }
         holder.tvName.setText(t.getName());
         holder.tvState.setText(t.getState());
         holder.tvStart.setText(t.getStart());

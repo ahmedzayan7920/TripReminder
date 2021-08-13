@@ -2,13 +2,9 @@ package com.example.tripreminder;
 
 import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
-import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
-
 import android.Manifest;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.job.JobInfo;
@@ -22,14 +18,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +29,13 @@ import android.widget.PopupMenu;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,7 +45,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class UpComingFragment extends Fragment {
     private RecyclerView rv;
@@ -60,7 +54,7 @@ public class UpComingFragment extends Fragment {
     public static final String TRIP_KEY = null;
     private ProgressDialog pd;
 
-    private Date allDate;
+    private Calendar allDate;
 
 
     public static int jobID = 0;
@@ -77,7 +71,7 @@ public class UpComingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_up_coming, container, false);
-        allDate = new Date();
+        allDate = Calendar.getInstance();
         rv = view.findViewById(R.id.upcoming_rv);
         pd = new ProgressDialog(getContext());
         pd.setMessage("Please Wait....");
@@ -198,9 +192,9 @@ public class UpComingFragment extends Fragment {
                                         DatePickerDialog d = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                                             @Override
                                             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                                                allDate.setYear(i);
-                                                allDate.setMonth(i1);
-                                                allDate.setDate(i2);
+                                                allDate.set(Calendar.YEAR, i);
+                                                allDate.set(Calendar.MONTH, i1);
+                                                allDate.set(Calendar.DAY_OF_MONTH, i2);
                                                 notes[0] += "     Done";
                                                 builder.show();
                                             }
@@ -213,8 +207,8 @@ public class UpComingFragment extends Fragment {
                                         TimePickerDialog t = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                                             @Override
                                             public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                                allDate.setHours(i);
-                                                allDate.setMinutes(i1);
+                                                allDate.set(Calendar.HOUR_OF_DAY, i);
+                                                allDate.set(Calendar.MINUTE, i1);
                                                 notes[1] += "     Done";
                                                 builder.show();
                                             }
@@ -260,36 +254,42 @@ public class UpComingFragment extends Fragment {
     }
 
     private void getTrips() {
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //if (getActivity() != null && getContext() != null) {
                 try{
                     trips.clear();
                     JobScheduler scheduler = (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
                     scheduler.cancelAll();
                     for (DataSnapshot t : snapshot.getChildren()) {
-                        Trip trip = t.getValue(Trip.class);
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.YEAR, t.child("date").child("weekYear").getValue(Integer.class));
+                        c.set(Calendar.MONTH, t.child("date").child("time").child("month").getValue(Integer.class));
+                        c.set(Calendar.DAY_OF_MONTH, t.child("date").child("time").child("date").getValue(Integer.class));
+                        c.set(Calendar.HOUR_OF_DAY, t.child("date").child("time").child("hours").getValue(Integer.class));
+                        c.set(Calendar.MINUTE, t.child("date").child("time").child("minutes").getValue(Integer.class));
+                        c.set(Calendar.SECOND, t.child("date").child("time").child("seconds").getValue(Integer.class));
+                        c.set(Calendar.MILLISECOND, 0);
+                        String end = (String) t.child("end").getValue();
+                        String key = (String) t.child("key").getValue();
+                        String name = (String) t.child("name").getValue();
+                        String notes = (String) t.child("notes").getValue();
+                        String repeat = (String) t.child("repeat").getValue();
+                        String start = (String) t.child("start").getValue();
+                        String state = (String) t.child("state").getValue();
+                        String way = (String) t.child("way").getValue();
+                        Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
                         if (trip.getState().equals("upcoming")) {
-
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(Calendar.YEAR, trip.getDate().getYear());
-                            calendar.set(Calendar.MONTH, trip.getDate().getMonth());
-                            calendar.set(Calendar.DAY_OF_MONTH, trip.getDate().getDate());
-                            calendar.set(Calendar.HOUR_OF_DAY, trip.getDate().getHours());
-                            calendar.set(Calendar.MINUTE, trip.getDate().getMinutes());
-                            calendar.set(Calendar.SECOND, 0);
-                            calendar.set(Calendar.MILLISECOND, 0);
-                            long time = calendar.getTimeInMillis() - System.currentTimeMillis();
-
+                            long time = c.getTimeInMillis() - System.currentTimeMillis();
                             if (time > 0) {
                                 ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
                                 JobInfo info;
                                 PersistableBundle bundle = new PersistableBundle();
                                 bundle.putString("trip_key", trip.getKey());
                                 bundle.putString("trip_repeat", trip.getRepeat());
+                                bundle.putString("title", trip.getName());
+                                bundle.putString("body", "From " + trip.getStart() + " to " + trip.getEnd());
                                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
                                     info = new JobInfo.Builder(jobID, componentName)
                                             .setPeriodic(time)
@@ -331,20 +331,3 @@ public class UpComingFragment extends Fragment {
 
     }
 }
-/*
-Intent notifyIntent = new Intent(getActivity().getBaseContext(), MyReceiver.class);
-                            notifyIntent.putExtra("trip_key", trip.getKey());
-                            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                            AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTimeInMillis(System.currentTimeMillis());
-                            calendar.set(Calendar.YEAR, trip.getDate().getYear());
-                            calendar.set(Calendar.MONTH, trip.getDate().getMonth());
-                            calendar.set(Calendar.DAY_OF_MONTH, trip.getDate().getDate());
-                            calendar.set(Calendar.HOUR_OF_DAY, trip.getDate().getHours());
-                            calendar.set(Calendar.MINUTE, trip.getDate().getMinutes());
-                            calendar.set(Calendar.SECOND, 0);
-                            calendar.set(Calendar.MILLISECOND, 0);
-                            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
- */

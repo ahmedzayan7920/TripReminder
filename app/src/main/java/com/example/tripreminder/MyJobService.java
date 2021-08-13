@@ -8,34 +8,26 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.app.job.JobInfo;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
-import android.os.PersistableBundle;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.Calendar;
-import java.util.Date;
 
 public class MyJobService extends JobService {
     private Trip trip;
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
+
+        if (MainActivity.mainActivity != null){
+            MainActivity.mainActivity.finish();
+        }
+
         String key = jobParameters.getExtras().getString("trip_key");
+        String title = jobParameters.getExtras().getString("title");
+        String body = jobParameters.getExtras().getString("body");
         String repeat = jobParameters.getExtras().getString("trip_repeat");
 
         Intent intent = new Intent(this, DialogActivity.class);
@@ -45,6 +37,7 @@ public class MyJobService extends JobService {
 
 
         Intent resultIntent = new Intent(this, DialogActivity.class);
+        resultIntent.putExtra("key", key);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -57,9 +50,9 @@ public class MyJobService extends JobService {
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("My Title")
-                .setContentText("This is the Body")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher_test)
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
                 .setOngoing(true)
@@ -77,7 +70,7 @@ public class MyJobService extends JobService {
     public boolean onStopJob(JobParameters jobParameters) {
         return false;
     }
-
+/*
     private void getTrip(String key) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -88,7 +81,7 @@ public class MyJobService extends JobService {
                     String k = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
                     trip.setKey(k);
                     int i = trip.getDate().getDate();
-                    Date d = new Date();
+                    Calendar d = new Date();
                     d = trip.getDate();
                     d.setDate(i+1);
                     trip.setDate(d);
@@ -101,6 +94,6 @@ public class MyJobService extends JobService {
 
             }
         });
-    }
+    }*/
 
 }

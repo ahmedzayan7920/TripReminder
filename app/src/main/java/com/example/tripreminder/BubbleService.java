@@ -13,6 +13,7 @@ import com.siddharthks.bubbles.FloatingBubbleService;
 
 public class BubbleService extends FloatingBubbleService {
     String notes;
+    public static BubbleService bubbleService;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         notes = intent.getStringExtra("notes");
@@ -25,6 +26,7 @@ public class BubbleService extends FloatingBubbleService {
         View view = getInflater().inflate(R.layout.activity_bubble_view, null);
         TextView tv = view.findViewById(R.id.tv_bubble_notes);
         tv.setText(notes);
+        bubbleService = this;
         return new FloatingBubbleConfig.Builder()
                 .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.icon))
                 .removeBubbleIcon(ContextCompat.getDrawable(context, com.siddharthks.bubbles.R.drawable.close_default_icon))

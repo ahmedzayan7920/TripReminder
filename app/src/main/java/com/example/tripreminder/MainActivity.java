@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvUserEmail;
     private ImageView ivUserImage;
     static boolean flag = true;
+    public static MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.drawer_view);
         View view = navigationView.getHeaderView(0);
 
+        mainActivity = this;
         if (flag) {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true);
             flag = false;
@@ -156,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
 
