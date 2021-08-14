@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_add:
-                Intent intent = new Intent(getBaseContext(), AddAndEdit.class);
+                Intent intent = new Intent(getBaseContext(), AddTestActivity.class);
                 startActivity(intent);
                 return true;
         }
@@ -158,11 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }
 

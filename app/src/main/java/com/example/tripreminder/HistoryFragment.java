@@ -27,7 +27,7 @@ import java.util.Calendar;
 public class HistoryFragment extends Fragment {
     private RecyclerView rv2;
     private HistoryAdapter adapter;
-    private ArrayList<Trip> trips;
+    private ArrayList<TripTest> trips;
     private FloatingActionButton fab;
 
     @Override
@@ -105,11 +105,11 @@ public class HistoryFragment extends Fragment {
                 trips.clear();
                 for (DataSnapshot t : snapshot.getChildren()) {
                     Calendar c = Calendar.getInstance();
-                    c.set(Calendar.YEAR, t.child("date").child("weekYear").getValue(Integer.class));
-                    c.set(Calendar.MONTH, t.child("date").child("time").child("month").getValue(Integer.class));
-                    c.set(Calendar.DAY_OF_MONTH, t.child("date").child("time").child("date").getValue(Integer.class));
-                    c.set(Calendar.HOUR_OF_DAY, t.child("date").child("time").child("hours").getValue(Integer.class));
-                    c.set(Calendar.MINUTE, t.child("date").child("time").child("minutes").getValue(Integer.class));
+                    c.set(Calendar.YEAR, t.child("goDate").child("weekYear").getValue(Integer.class));
+                    c.set(Calendar.MONTH, t.child("goDate").child("time").child("month").getValue(Integer.class));
+                    c.set(Calendar.DAY_OF_MONTH, t.child("goDate").child("time").child("date").getValue(Integer.class));
+                    c.set(Calendar.HOUR_OF_DAY, t.child("goDate").child("time").child("hours").getValue(Integer.class));
+                    c.set(Calendar.MINUTE, t.child("goDate").child("time").child("minutes").getValue(Integer.class));
                     String end = (String) t.child("end").getValue();
                     String key = (String) t.child("key").getValue();
                     String name = (String) t.child("name").getValue();
@@ -118,7 +118,7 @@ public class HistoryFragment extends Fragment {
                     String start = (String) t.child("start").getValue();
                     String state = (String) t.child("state").getValue();
                     String way = (String) t.child("way").getValue();
-                    Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
+                    TripTest trip = new TripTest(c, name, state, start, end, key, notes, way, repeat);
                     if (trip.getState().equals("upcoming")) {
 
                     } else {

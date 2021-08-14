@@ -1,14 +1,16 @@
 package com.example.tripreminder;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -29,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class AddTestActivity extends AppCompatActivity {
+public class AddTestActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private EditText addEtName;
     private EditText addEtStart;
@@ -50,6 +52,9 @@ public class AddTestActivity extends AppCompatActivity {
     private TripTest trip;
     private Calendar allGoDate;
     private Calendar allReturnDate;
+
+    private LinearLayout addLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +72,7 @@ public class AddTestActivity extends AppCompatActivity {
         spinnerWay = findViewById(R.id.add_spinner_way);
         addBtnAddNotes = findViewById(R.id.add_btn_add_notes);
         addBtnSave = findViewById(R.id.add_btn_save);
+        addLayout = findViewById(R.id.add_return_layout);
 
         allGoDate = Calendar.getInstance();
         allReturnDate = Calendar.getInstance();
@@ -74,14 +80,52 @@ public class AddTestActivity extends AppCompatActivity {
         if (key != null) {
             FirebaseDatabase.getInstance().getReference("Trips").child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child(key)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @SuppressLint({"ResourceAsColor", "SetTextI18n"})
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            trip = snapshot.getValue(TripTest.class);
-                            if (trip != null){
+                            String end = (String) snapshot.child("end").getValue();
+                            String key = (String) snapshot.child("key").getValue();
+                            String name = (String) snapshot.child("name").getValue();
+                            String notes = (String) snapshot.child("notes").getValue();
+                            String repeat = (String) snapshot.child("repeat").getValue();
+                            String start = (String) snapshot.child("start").getValue();
+                            String state = (String) snapshot.child("state").getValue();
+                            String way = (String) snapshot.child("way").getValue();
+                            if (way.equals("One way Trip")){
+                                Calendar goDate = Calendar.getInstance();
+                                goDate.set(Calendar.YEAR, snapshot.child("goDate").child("weekYear").getValue(Integer.class));
+                                goDate.set(Calendar.MONTH, snapshot.child("goDate").child("time").child("month").getValue(Integer.class));
+                                goDate.set(Calendar.DAY_OF_MONTH, snapshot.child("goDate").child("time").child("date").getValue(Integer.class));
+                                goDate.set(Calendar.HOUR_OF_DAY, snapshot.child("goDate").child("time").child("hours").getValue(Integer.class));
+                                goDate.set(Calendar.MINUTE, snapshot.child("goDate").child("time").child("minutes").getValue(Integer.class));
+                                goDate.set(Calendar.SECOND, snapshot.child("goDate").child("time").child("seconds").getValue(Integer.class));
+
+                                trip = new TripTest(goDate, name, state, start, end, key, notes, way, repeat);
+                            }else {
+                                Calendar goDate = Calendar.getInstance();
+                                goDate.set(Calendar.YEAR, snapshot.child("goDate").child("weekYear").getValue(Integer.class));
+                                goDate.set(Calendar.MONTH, snapshot.child("goDate").child("time").child("month").getValue(Integer.class));
+                                goDate.set(Calendar.DAY_OF_MONTH, snapshot.child("goDate").child("time").child("date").getValue(Integer.class));
+                                goDate.set(Calendar.HOUR_OF_DAY, snapshot.child("goDate").child("time").child("hours").getValue(Integer.class));
+                                goDate.set(Calendar.MINUTE, snapshot.child("goDate").child("time").child("minutes").getValue(Integer.class));
+                                goDate.set(Calendar.SECOND, snapshot.child("goDate").child("time").child("seconds").getValue(Integer.class));
+
+                                Calendar returnDate = Calendar.getInstance();
+                                returnDate.set(Calendar.YEAR, snapshot.child("goDate").child("weekYear").getValue(Integer.class));
+                                returnDate.set(Calendar.MONTH, snapshot.child("goDate").child("time").child("month").getValue(Integer.class));
+                                returnDate.set(Calendar.DAY_OF_MONTH, snapshot.child("goDate").child("time").child("date").getValue(Integer.class));
+                                returnDate.set(Calendar.HOUR_OF_DAY, snapshot.child("goDate").child("time").child("hours").getValue(Integer.class));
+                                returnDate.set(Calendar.MINUTE, snapshot.child("goDate").child("time").child("minutes").getValue(Integer.class));
+                                returnDate.set(Calendar.SECOND, snapshot.child("goDate").child("time").child("seconds").getValue(Integer.class));
+
+                                trip = new TripTest(goDate, returnDate, name, state, start, end, key, notes, way, repeat);
+                            }
+
+                            if (trip != null) {
                                 addEtName.setText(trip.getName());
                                 addEtStart.setText(trip.getStart());
                                 addEtEnd.setText(trip.getEnd());
-                                if (trip.getWay().contains("One")) {
+                                if (trip.getWay().equals("One way Trip")) {
                                     spinnerWay.setSelection(0);
                                     addTvGoDate.setText(trip.getGoDate().get(Calendar.YEAR) + "/" + (trip.getGoDate().get(Calendar.MONTH) + 1) + "/" + trip.getGoDate().get(Calendar.DAY_OF_MONTH));
                                     allGoDate.set(Calendar.YEAR, trip.getGoDate().get(Calendar.YEAR));
@@ -90,11 +134,76 @@ public class AddTestActivity extends AppCompatActivity {
                                     allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
                                     allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
 
-                                    addTvGoTime.setText(trip.getGoDate().get(Calendar.HOUR_OF_DAY) + ":" + trip.getGoDate().get(Calendar.MINUTE));
+                                    if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 0) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((12) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        } else {
+                                            addTvGoTime.setText((12) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        }
+                                    } else if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 12) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        } else {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        }
+
+                                    } else if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) >= 13) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY) - 12) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        } else {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY) - 12) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        }
+
+                                    } else {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        } else {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        }
+                                    }
                                     allGoDate.set(Calendar.HOUR_OF_DAY, trip.getGoDate().get(Calendar.HOUR_OF_DAY));
                                     allGoDate.set(Calendar.MINUTE, trip.getGoDate().get(Calendar.MINUTE));
                                 } else {
+                                    addLayout.setVisibility(View.VISIBLE);
                                     spinnerWay.setSelection(1);
+                                    addTvGoDate.setText(trip.getGoDate().get(Calendar.YEAR) + "/" + (trip.getGoDate().get(Calendar.MONTH) + 1) + "/" + trip.getGoDate().get(Calendar.DAY_OF_MONTH));
+                                    allGoDate.set(Calendar.YEAR, trip.getGoDate().get(Calendar.YEAR));
+                                    allGoDate.set(Calendar.MONTH, trip.getGoDate().get(Calendar.MONTH));
+                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
+                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
+                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
+
+
+                                    if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 0) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((12) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        } else {
+                                            addTvGoTime.setText((12) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        }
+                                    } else if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 12) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        } else {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        }
+
+                                    } else if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) >= 13) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY) - 12) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        } else {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY) - 12) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        }
+
+                                    } else {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        } else {
+                                            addTvGoTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        }
+                                    }
+                                    allGoDate.set(Calendar.HOUR_OF_DAY, trip.getGoDate().get(Calendar.HOUR_OF_DAY));
+                                    allGoDate.set(Calendar.MINUTE, trip.getGoDate().get(Calendar.MINUTE));
+
                                     addTvReturnDate.setText(trip.getReturnDate().get(Calendar.YEAR) + "/" + (trip.getReturnDate().get(Calendar.MONTH) + 1) + "/" + trip.getReturnDate().get(Calendar.DAY_OF_MONTH));
                                     allReturnDate.set(Calendar.YEAR, trip.getReturnDate().get(Calendar.YEAR));
                                     allReturnDate.set(Calendar.MONTH, trip.getReturnDate().get(Calendar.MONTH));
@@ -103,6 +212,34 @@ public class AddTestActivity extends AppCompatActivity {
                                     allReturnDate.set(Calendar.DAY_OF_MONTH, trip.getReturnDate().get(Calendar.DAY_OF_MONTH));
 
                                     addTvReturnTime.setText(trip.getReturnDate().get(Calendar.HOUR_OF_DAY) + ":" + trip.getReturnDate().get(Calendar.MINUTE));
+
+                                    if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 0) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvReturnTime.setText((12) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        } else {
+                                            addTvReturnTime.setText((12) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        }
+                                    } else if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 12) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvReturnTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        } else {
+                                            addTvReturnTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        }
+
+                                    } else if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) >= 13) {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvReturnTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY) - 12) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        } else {
+                                            addTvReturnTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY) - 12) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " pm");
+                                        }
+
+                                    } else {
+                                        if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
+                                            addTvReturnTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        } else {
+                                            addTvReturnTime.setText((trip.getGoDate().get(Calendar.HOUR_OF_DAY)) + ":" + "0" + trip.getGoDate().get(Calendar.MINUTE) + " am");
+                                        }
+                                    }
                                     allReturnDate.set(Calendar.HOUR_OF_DAY, trip.getReturnDate().get(Calendar.HOUR_OF_DAY));
                                     allReturnDate.set(Calendar.MINUTE, trip.getReturnDate().get(Calendar.MINUTE));
                                 }
@@ -138,18 +275,19 @@ public class AddTestActivity extends AppCompatActivity {
         listRepeat.add("Weekly");
         listRepeat.add("Monthly");
         ArrayAdapter<String> dataAdapterRepeat = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, listRepeat);
+                R.layout.spinner_list, listRepeat);
         dataAdapterRepeat.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerRepeat.setAdapter(dataAdapterRepeat);
+
 
         List<String> listTrip = new ArrayList<>();
         listTrip.add("One way Trip");
         listTrip.add("Round Trip");
         ArrayAdapter<String> dataAdapterTrip = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, listTrip);
+                R.layout.spinner_list, listTrip);
         dataAdapterTrip.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerWay.setAdapter(dataAdapterTrip);
-
+        spinnerWay.setOnItemSelectedListener(this);
 
         addTvGoDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,11 +298,10 @@ public class AddTestActivity extends AppCompatActivity {
                     int month = c.get(Calendar.MONTH);
                     int year = c.get(Calendar.YEAR);
                     DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                             addTvGoDate.setText(i + "/" + (i1 + 1) + "/" + i2);
-                            Log.i("012301230123", i+"");
-                            Toast.makeText(getApplicationContext(), i+"", Toast.LENGTH_SHORT).show();
                             allGoDate.set(Calendar.YEAR, i);
                             allGoDate.set(Calendar.MONTH, i1);
                             allGoDate.set(Calendar.DAY_OF_MONTH, i2);
@@ -174,11 +311,10 @@ public class AddTestActivity extends AppCompatActivity {
                 } else {
 
                     DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                             addTvGoDate.setText(i + "/" + (i1 + 1) + "/" + i2);
-                            Log.i("012301230123", i+"");
-                            Toast.makeText(getApplicationContext(), i+"", Toast.LENGTH_SHORT).show();
                             allGoDate.set(Calendar.YEAR, i);
                             allGoDate.set(Calendar.MONTH, i1);
                             allGoDate.set(Calendar.DAY_OF_MONTH, i2);
@@ -200,22 +336,35 @@ public class AddTestActivity extends AppCompatActivity {
                     int hour = c.get(Calendar.HOUR_OF_DAY);
                     int minute = c.get(Calendar.MINUTE);
                     TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                            Log.i("01598753", i + " hour" + i1 + " minute");
 
-                            if (i >= 13){
-                                if (i1 >= 10){
-                                    addTvGoTime.setText((i-12) + ":" + i1 + " pm");
-                                }else{
-                                    addTvGoTime.setText((i-12) + ":" + "0"+i1 + " pm");
+                            if (i == 0) {
+                                if (i1 >= 10) {
+                                    addTvGoTime.setText((12) + ":" + i1 + " am");
+                                } else {
+                                    addTvGoTime.setText((12) + ":" + "0" + i1 + " am");
+                                }
+                            } else if (i == 12) {
+                                if (i1 >= 10) {
+                                    addTvGoTime.setText((i) + ":" + i1 + " pm");
+                                } else {
+                                    addTvGoTime.setText((i) + ":" + "0" + i1 + " pm");
                                 }
 
-                            }else {
-                                if (i1 >= 10){
+                            } else if (i >= 13) {
+                                if (i1 >= 10) {
+                                    addTvGoTime.setText((i - 12) + ":" + i1 + " pm");
+                                } else {
+                                    addTvGoTime.setText((i - 12) + ":" + "0" + i1 + " pm");
+                                }
+
+                            } else {
+                                if (i1 >= 10) {
                                     addTvGoTime.setText((i) + ":" + i1 + " am");
-                                }else{
-                                    addTvGoTime.setText((i) + ":" + "0"+i1 + " am");
+                                } else {
+                                    addTvGoTime.setText((i) + ":" + "0" + i1 + " am");
                                 }
                             }
                             allGoDate.set(Calendar.HOUR_OF_DAY, i);
@@ -227,21 +376,35 @@ public class AddTestActivity extends AppCompatActivity {
                     t.show();
                 } else {
                     TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
 
-                            if (i >= 13){
-                                if (i1 >= 10){
-                                    addTvGoTime.setText((i-12) + ":" + i1 + " pm");
-                                }else{
-                                    addTvGoTime.setText((i-12) + ":" + "0"+i1 + " pm");
+                            if (i == 0) {
+                                if (i1 >= 10) {
+                                    addTvGoTime.setText((12) + ":" + i1 + " am");
+                                } else {
+                                    addTvGoTime.setText((12) + ":" + "0" + i1 + " am");
+                                }
+                            } else if (i == 12) {
+                                if (i1 >= 10) {
+                                    addTvGoTime.setText((i) + ":" + i1 + " pm");
+                                } else {
+                                    addTvGoTime.setText((i) + ":" + "0" + i1 + " pm");
                                 }
 
-                            }else {
-                                if (i1 >= 10){
+                            } else if (i >= 13) {
+                                if (i1 >= 10) {
+                                    addTvGoTime.setText((i - 12) + ":" + i1 + " pm");
+                                } else {
+                                    addTvGoTime.setText((i - 12) + ":" + "0" + i1 + " pm");
+                                }
+
+                            } else {
+                                if (i1 >= 10) {
                                     addTvGoTime.setText((i) + ":" + i1 + " am");
-                                }else{
-                                    addTvGoTime.setText((i) + ":" + "0"+i1 + " am");
+                                } else {
+                                    addTvGoTime.setText((i) + ":" + "0" + i1 + " am");
                                 }
                             }
                             allGoDate.set(Calendar.HOUR, i);
@@ -259,38 +422,21 @@ public class AddTestActivity extends AppCompatActivity {
         addTvReturnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null) {
                     Calendar c = Calendar.getInstance();
                     int day = c.get(Calendar.DAY_OF_MONTH);
                     int month = c.get(Calendar.MONTH);
                     int year = c.get(Calendar.YEAR);
                     DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                             addTvReturnDate.setText(i + "/" + (i1 + 1) + "/" + i2);
-                            Log.i("012301230123", i+"");
-                            Toast.makeText(getApplicationContext(), i+"", Toast.LENGTH_SHORT).show();
                             allReturnDate.set(Calendar.YEAR, i);
                             allReturnDate.set(Calendar.MONTH, i1);
                             allReturnDate.set(Calendar.DAY_OF_MONTH, i2);
                         }
                     }, year, month, day);
                     d.show();
-                } else {
-
-                    DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                            addTvReturnDate.setText(i + "/" + (i1 + 1) + "/" + i2);
-                            Log.i("012301230123", i+"");
-                            Toast.makeText(getApplicationContext(), i+"", Toast.LENGTH_SHORT).show();
-                            allReturnDate.set(Calendar.YEAR, i);
-                            allReturnDate.set(Calendar.MONTH, i1);
-                            allReturnDate.set(Calendar.DAY_OF_MONTH, i2);
-                        }
-                    }, trip.getReturnDate().get(Calendar.YEAR), trip.getReturnDate().get(Calendar.MONTH), trip.getReturnDate().get(Calendar.DAY_OF_MONTH));
-                    d.show();
-                }
             }
         });
 
@@ -298,27 +444,39 @@ public class AddTestActivity extends AppCompatActivity {
         addTvReturnTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null) {
                     Calendar c = Calendar.getInstance();
                     int hour = c.get(Calendar.HOUR_OF_DAY);
                     int minute = c.get(Calendar.MINUTE);
                     TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                            Log.i("01598753", i + " hour" + i1 + " minute");
 
-                            if (i >= 13){
-                                if (i1 >= 10){
-                                    addTvReturnTime.setText((i-12) + ":" + i1 + " pm");
-                                }else{
-                                    addTvReturnTime.setText((i-12) + ":" + "0"+i1 + " pm");
+                            if (i == 0) {
+                                if (i1 >= 10) {
+                                    addTvReturnTime.setText((12) + ":" + i1 + " am");
+                                } else {
+                                    addTvReturnTime.setText((12) + ":" + "0" + i1 + " am");
+                                }
+                            } else if (i == 12) {
+                                if (i1 >= 10) {
+                                    addTvReturnTime.setText((i) + ":" + i1 + " pm");
+                                } else {
+                                    addTvReturnTime.setText((i) + ":" + "0" + i1 + " pm");
                                 }
 
-                            }else {
-                                if (i1 >= 10){
+                            } else if (i >= 13) {
+                                if (i1 >= 10) {
+                                    addTvReturnTime.setText((i - 12) + ":" + i1 + " pm");
+                                } else {
+                                    addTvReturnTime.setText((i - 12) + ":" + "0" + i1 + " pm");
+                                }
+
+                            } else {
+                                if (i1 >= 10) {
                                     addTvReturnTime.setText((i) + ":" + i1 + " am");
-                                }else{
-                                    addTvReturnTime.setText((i) + ":" + "0"+i1 + " am");
+                                } else {
+                                    addTvReturnTime.setText((i) + ":" + "0" + i1 + " am");
                                 }
                             }
                             allReturnDate.set(Calendar.HOUR_OF_DAY, i);
@@ -328,33 +486,7 @@ public class AddTestActivity extends AppCompatActivity {
                         }
                     }, hour, minute, false);
                     t.show();
-                } else {
-                    TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker timePicker, int i, int i1) {
 
-                            if (i >= 13){
-                                if (i1 >= 10){
-                                    addTvReturnTime.setText((i-12) + ":" + i1 + " pm");
-                                }else{
-                                    addTvReturnTime.setText((i-12) + ":" + "0"+i1 + " pm");
-                                }
-
-                            }else {
-                                if (i1 >= 10){
-                                    addTvReturnTime.setText((i) + ":" + i1 + " am");
-                                }else{
-                                    addTvReturnTime.setText((i) + ":" + "0"+i1 + " am");
-                                }
-                            }
-                            allReturnDate.set(Calendar.HOUR, i);
-                            allReturnDate.set(Calendar.MINUTE, i1);
-                            allReturnDate.set(Calendar.SECOND, 0);
-                            allReturnDate.set(Calendar.MILLISECOND, 0);
-                        }
-                    }, trip.getReturnDate().get(Calendar.HOUR_OF_DAY), trip.getReturnDate().get(Calendar.MINUTE), false);
-                    t.show();
-                }
             }
         });
 
@@ -363,15 +495,15 @@ public class AddTestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!addEtName.getText().toString().isEmpty() && !addEtStart.getText().toString().isEmpty() && !addEtEnd.getText().toString().isEmpty() &&
                         !addTvGoDate.getText().toString().isEmpty() && !addTvGoTime.getText().toString().isEmpty()) {
-                    if (spinnerWay.getSelectedItem().equals("Round Trip")){
-                        if (!addTvReturnDate.getText().toString().isEmpty() && !addTvReturnTime.getText().toString().isEmpty()){
+                    if (spinnerWay.getSelectedItem().equals("Round Trip")) {
+                        if (!addTvReturnDate.getText().toString().isEmpty() && !addTvReturnTime.getText().toString().isEmpty()) {
+                            String name = addEtName.getText().toString();
+                            String start = addEtStart.getText().toString();
+                            String end = addEtEnd.getText().toString();
+                            String w = spinnerWay.getSelectedItem().toString();
+                            String r = spinnerRepeat.getSelectedItem().toString();
+                            String n = addEtNotes.getText().toString();
                             if (key == null) {
-                                String name = addEtName.getText().toString();
-                                String start = addEtStart.getText().toString();
-                                String end = addEtEnd.getText().toString();
-                                String w = spinnerWay.getSelectedItem().toString();
-                                String r = spinnerRepeat.getSelectedItem().toString();
-                                String n = addEtNotes.getText().toString();
                                 String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
                                 HashMap<String, Object> hashMap = new HashMap<>();
                                 hashMap.put("goDate", allGoDate);
@@ -385,15 +517,8 @@ public class AddTestActivity extends AppCompatActivity {
                                 hashMap.put("way", w);
                                 hashMap.put("repeat", r);
                                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
-                                finish();
 
                             } else {
-                                String name = addEtName.getText().toString();
-                                String start = addEtStart.getText().toString();
-                                String end = addEtEnd.getText().toString();
-                                String w = spinnerWay.getSelectedItem().toString();
-                                String r = spinnerRepeat.getSelectedItem().toString();
-                                String n = addEtNotes.getText().toString();
 
                                 HashMap<String, Object> hashMap = new HashMap<>();
                                 hashMap.put("goDate", allGoDate);
@@ -407,23 +532,25 @@ public class AddTestActivity extends AppCompatActivity {
                                 hashMap.put("way", w);
                                 hashMap.put("repeat", r);
                                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
-                                finish();
                             }
-                        }else{
+                            finish();
+                        } else {
                             if (addTvReturnDate.getText().toString().isEmpty()) {
+                                addTvReturnTime.setError("Please Enter Return Date");
                                 Toast.makeText(AddTestActivity.this, "Please Enter Return Date", Toast.LENGTH_SHORT).show();
                             } else if (addTvReturnTime.getText().toString().isEmpty()) {
+                                addTvReturnTime.setError("Please Enter Return Time");
                                 Toast.makeText(AddTestActivity.this, "Please Enter Return Time", Toast.LENGTH_SHORT).show();
                             }
                         }
-                    }else{
+                    } else {
+                        String name = addEtName.getText().toString();
+                        String start = addEtStart.getText().toString();
+                        String end = addEtEnd.getText().toString();
+                        String w = spinnerWay.getSelectedItem().toString();
+                        String r = spinnerRepeat.getSelectedItem().toString();
+                        String n = addEtNotes.getText().toString();
                         if (key == null) {
-                            String name = addEtName.getText().toString();
-                            String start = addEtStart.getText().toString();
-                            String end = addEtEnd.getText().toString();
-                            String w = spinnerWay.getSelectedItem().toString();
-                            String r = spinnerRepeat.getSelectedItem().toString();
-                            String n = addEtNotes.getText().toString();
                             String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
                             HashMap<String, Object> hashMap = new HashMap<>();
                             hashMap.put("goDate", allGoDate);
@@ -436,15 +563,8 @@ public class AddTestActivity extends AppCompatActivity {
                             hashMap.put("way", w);
                             hashMap.put("repeat", r);
                             FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
-                            finish();
 
                         } else {
-                            String name = addEtName.getText().toString();
-                            String start = addEtStart.getText().toString();
-                            String end = addEtEnd.getText().toString();
-                            String w = spinnerWay.getSelectedItem().toString();
-                            String r = spinnerRepeat.getSelectedItem().toString();
-                            String n = addEtNotes.getText().toString();
 
                             HashMap<String, Object> hashMap = new HashMap<>();
                             hashMap.put("goDate", allGoDate);
@@ -457,26 +577,45 @@ public class AddTestActivity extends AppCompatActivity {
                             hashMap.put("way", w);
                             hashMap.put("repeat", r);
                             FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
-                            finish();
                         }
+                        finish();
                     }
 
                 } else {
                     if (addEtName.getText().toString().isEmpty()) {
+                        addEtName.setError("Please Enter Trip Name");
                         Toast.makeText(AddTestActivity.this, "Please Enter Trip Name", Toast.LENGTH_SHORT).show();
                     } else if (addEtStart.getText().toString().isEmpty()) {
+                        addEtStart.setError("Please Enter Trip Start Point");
                         Toast.makeText(AddTestActivity.this, "Please Enter Trip Start Point", Toast.LENGTH_SHORT).show();
                     } else if (addEtEnd.getText().toString().isEmpty()) {
+                        addEtEnd.setError("Please Enter Trip End Point");
                         Toast.makeText(AddTestActivity.this, "Please Enter Trip End Point", Toast.LENGTH_SHORT).show();
                     } else if (addTvGoDate.getText().toString().isEmpty()) {
+                        addTvGoDate.setError("Please Enter Trip Date");
                         Toast.makeText(AddTestActivity.this, "Please Enter Trip Date", Toast.LENGTH_SHORT).show();
                     } else if (addTvGoTime.getText().toString().isEmpty()) {
+                        addTvGoTime.setError("Please Enter Trip Time");
                         Toast.makeText(AddTestActivity.this, "Please Enter Trip Time", Toast.LENGTH_SHORT).show();
                     }
 
                 }
             }
         });
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (adapterView.getItemAtPosition(i).equals("Round Trip")) {
+            addLayout.setVisibility(View.VISIBLE);
+        } else {
+            addLayout.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 }

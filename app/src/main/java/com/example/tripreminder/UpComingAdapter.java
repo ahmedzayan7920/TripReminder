@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripViewHolder> {
     private Context context;
-    private ArrayList<Trip> trips;
+    private ArrayList<TripTest> trips;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -92,7 +92,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
         }
     }
 
-    public UpComingAdapter(Context context, ArrayList<Trip> trips) {
+    public UpComingAdapter(Context context, ArrayList<TripTest> trips) {
         this.context = context;
         this.trips = trips;
     }
@@ -105,14 +105,27 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
 
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        Trip t = trips.get(position);
-        int year = t.getDate().get(Calendar.YEAR);
-        int month = t.getDate().get(Calendar.MONTH);
-        int day = t.getDate().get(Calendar.DAY_OF_MONTH);
-        int hour = t.getDate().get(Calendar.HOUR_OF_DAY);
-        int minute = t.getDate().get(Calendar.MINUTE);
+        TripTest t = trips.get(position);
+        int year = t.getGoDate().get(Calendar.YEAR);
+        int month = t.getGoDate().get(Calendar.MONTH);
+        int day = t.getGoDate().get(Calendar.DAY_OF_MONTH);
+        int hour = t.getGoDate().get(Calendar.HOUR_OF_DAY);
+        int minute = t.getGoDate().get(Calendar.MINUTE);
         holder.tvDate.setText(day+"/"+(month+1)+"/"+year);
-        if (hour >= 13){
+        if (hour == 0) {
+            if (minute >= 10) {
+                holder.tvTime.setText((12) + ":" + minute + " am");
+            } else {
+                holder.tvTime.setText((12) + ":" + "0" + minute + " am");
+            }
+        } else if (hour == 12) {
+            if (minute >= 10) {
+                holder.tvTime.setText((hour) + ":" + minute + " pm");
+            } else {
+                holder.tvTime.setText((hour) + ":" + "0" + minute + " pm");
+            }
+
+        } else if (hour >= 13){
             if (minute >= 10){
                 holder.tvTime.setText((hour-12) + ":" + minute + " pm");
             }else{

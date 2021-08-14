@@ -128,23 +128,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot t : snapshot.getChildren()) {
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.YEAR, t.child("date").child("weekYear").getValue(Integer.class));
-                    c.set(Calendar.MONTH, t.child("date").child("time").child("month").getValue(Integer.class));
-                    c.set(Calendar.DAY_OF_MONTH, t.child("date").child("time").child("date").getValue(Integer.class));
-                    c.set(Calendar.HOUR_OF_DAY, t.child("date").child("time").child("hours").getValue(Integer.class));
-                    c.set(Calendar.MINUTE, t.child("date").child("time").child("minutes").getValue(Integer.class));
-                    c.set(Calendar.SECOND, t.child("date").child("time").child("seconds").getValue(Integer.class));
                     String end = (String) t.child("end").getValue();
-                    String key = (String) t.child("key").getValue();
-                    String name = (String) t.child("name").getValue();
-                    String notes = (String) t.child("notes").getValue();
-                    String repeat = (String) t.child("repeat").getValue();
-                    String start = (String) t.child("start").getValue();
-                    String state = (String) t.child("state").getValue();
-                    String way = (String) t.child("way").getValue();
-                    Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
-                    ends.add(trip.getEnd());
+                    ends.add(end);
                 }
             }
 

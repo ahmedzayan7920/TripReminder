@@ -1,9 +1,11 @@
 package com.example.tripreminder;
 
+import static android.content.Intent.FLAG_ACTIVITY_MULTIPLE_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.example.tripreminder.MainActivity.CHANNEL_ID;
 import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,7 +19,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class MyJobService extends JobService {
-    private Trip trip;
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
 
@@ -32,6 +33,7 @@ public class MyJobService extends JobService {
 
         Intent intent = new Intent(this, DialogActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(FLAG_ACTIVITY_MULTIPLE_TASK);
         intent.putExtra("key", key);
         startActivity(intent);
 
@@ -56,6 +58,7 @@ public class MyJobService extends JobService {
                 .setAutoCancel(false)
                 .setContentIntent(resultPendingIntent)
                 .setOngoing(true)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(NOTIFICATION_ID, builder.build());

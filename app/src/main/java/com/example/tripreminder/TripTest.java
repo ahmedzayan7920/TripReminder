@@ -9,7 +9,7 @@ public class TripTest {
     private String state;
     private String start;
     private String end;
-    private static boolean expand = false;
+    private boolean expand = false;
     private String key;
     private String notes;
     private String way;
@@ -22,6 +22,19 @@ public class TripTest {
 
 
     public TripTest(Calendar goDate, Calendar returnDate, String name, String state, String start, String end, String key, String notes, String way, String repeat) {
+        this.goDate = goDate;
+        this.returnDate = returnDate;
+        this.name = name;
+        this.state = state;
+        this.start = start;
+        this.end = end;
+        this.key = key;
+        this.notes = notes;
+        this.way = way;
+        this.repeat = repeat;
+    }
+
+    public TripTest(Calendar goDate, String name, String state, String start, String end, String key, String notes, String way, String repeat) {
         this.goDate = goDate;
         this.returnDate = returnDate;
         this.name = name;

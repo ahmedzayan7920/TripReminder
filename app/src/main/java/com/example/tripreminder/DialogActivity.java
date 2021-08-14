@@ -2,26 +2,26 @@ package com.example.tripreminder;
 
 import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
 import static com.example.tripreminder.MainActivity.flag;
+import static com.example.tripreminder.UpComingFragment.jobID;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.NotificationManager;
-import android.app.TimePickerDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class DialogActivity extends AppCompatActivity {
 
@@ -45,22 +46,17 @@ public class DialogActivity extends AppCompatActivity {
     private Uri notification;
     private Ringtone r;
 
-    private Trip tr;
-
-    private Calendar allDate;
-
+    private TripTest tr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dialog);
-        Log.i("0174469630", "create");
-            if (flag) {
-                FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                flag = false;
-            }
+        if (flag) {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+            flag = false;
+        }
 
-        allDate = Calendar.getInstance();
         String key = getIntent().getStringExtra("key");
         getTrip(key);
         try {
@@ -75,7 +71,6 @@ public class DialogActivity extends AppCompatActivity {
         btnCancel = findViewById(R.id.btn_dialog_cancel);
         btnLater = findViewById(R.id.btn_dialog_later);
         btnStart = findViewById(R.id.btn_dialog_start);
-
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,73 +115,68 @@ public class DialogActivity extends AppCompatActivity {
                     tr.setState("Done");
                     FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
                     finish();
+
                 } else {
-                    String[] notes = {"set Date", "Set Time"};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(DialogActivity.this);
-                    builder.setTitle("Set Round Time")
-                            .setItems(notes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    if (i == 0) {
-                                        Calendar c = Calendar.getInstance();
-                                        int day = c.get(Calendar.DAY_OF_MONTH);
-                                        int month = c.get(Calendar.MONTH);
-                                        int year = c.get(Calendar.YEAR);
+                    String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
+                    HashMap<String, Object> hashMap = new HashMap<>();
+                    hashMap.put("goDate", tr.getGoDate());
+                    hashMap.put("name", tr.getName());
+                    hashMap.put("state", "Done");
+                    hashMap.put("start", tr.getStart());
+                    hashMap.put("end", tr.getEnd());
+                    hashMap.put("key", key);
+                    hashMap.put("notes", tr.getNotes());
+                    hashMap.put("way", "One way Trip");
+                    hashMap.put("repeat", tr.getRepeat());
+                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
 
-                                        DatePickerDialog d = new DatePickerDialog(DialogActivity.this, new DatePickerDialog.OnDateSetListener() {
-                                            @Override
-                                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                                                allDate.set(Calendar.YEAR, i);
-                                                allDate.set(Calendar.MONTH, i1);
-                                                allDate.set(Calendar.DAY_OF_MONTH, i2);
-                                                notes[0] += "     Done";
-                                                builder.show();
-                                            }
-                                        }, year, month, day);
-                                        d.show();
-                                    } else if (i == 1) {
-                                        Calendar c = Calendar.getInstance();
-                                        int hour = c.get(Calendar.HOUR_OF_DAY);
-                                        int minute = c.get(Calendar.MINUTE);
-                                        TimePickerDialog t = new TimePickerDialog(DialogActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                                            @Override
-                                            public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                                                allDate.set(Calendar.HOUR_OF_DAY, i);
-                                                allDate.set(Calendar.MINUTE, i1);
-                                                notes[1] += "     Done";
-                                                builder.show();
-                                            }
-                                        }, hour, minute, true);
-                                        t.show();
-                                    }
-                                }
+                    String start = tr.getStart();
+                    String end = tr.getEnd();
+                    tr.setStart(tr.getEnd());
+                    tr.setEnd(start);
+                    tr.setGoDate(tr.getReturnDate());
 
-                            }).setPositiveButton("Save and Start", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            String start = tr.getStart();
-                            String end = tr.getEnd();
-                            tr.setStart(tr.getEnd());
-                            tr.setEnd(start);
-                            tr.setDate(allDate);
-                            tr.setWay("One way Trip");
-                            FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
-                            if (ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                    && ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    long time = tr.getGoDate().getTimeInMillis() - System.currentTimeMillis();
+                    JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                    ComponentName componentName = new ComponentName(getApplicationContext(), MyJobService.class);
+                    JobInfo info;
+                    PersistableBundle bundle = new PersistableBundle();
+                    bundle.putString("trip_key", tr.getKey());
+                    bundle.putString("trip_repeat", tr.getRepeat());
+                    bundle.putString("title", tr.getName());
+                    bundle.putString("body", "From " + tr.getStart() + " to " + tr.getEnd());
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+                        info = new JobInfo.Builder(jobID, componentName)
+                                .setPeriodic(time)
+                                .setExtras(bundle)
+                                .build();
+                    } else {
+                        info = new JobInfo.Builder(jobID, componentName)
+                                .setMinimumLatency(time)
+                                .setExtras(bundle)
+                                .build();
+                    }
 
-                                String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
-                                ActivityCompat.requestPermissions(DialogActivity.this, permissions, 101);
-                            }
-                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + end);
-                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                            mapIntent.setPackage("com.google.android.apps.maps");
-                            startActivity(mapIntent);
-                            Intent intent = new Intent(getApplicationContext(), BubbleService.class);
-                            intent.putExtra("notes", tr.getNotes());
-                            startService(intent);
-                            finish();
-                        }
-                    }).show();
+                    Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
+                    scheduler.schedule(info);
+                    jobID++;
+
+                    tr.setWay("One way Trip");
+                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(tr.getKey()).setValue(tr);
+                    if (ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+                        ActivityCompat.requestPermissions(DialogActivity.this, permissions, 101);
+                    }
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + end);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    startActivity(mapIntent);
+                    Intent intent = new Intent(getApplicationContext(), BubbleService.class);
+                    intent.putExtra("notes", tr.getNotes());
+                    startService(intent);
+                    finish();
                 }
             }
         });
@@ -194,32 +184,49 @@ public class DialogActivity extends AppCompatActivity {
     }
 
     private void getTrip(String k) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(k);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot t : snapshot.getChildren()) {
-                    Calendar c = Calendar.getInstance();
-                    c.set(Calendar.YEAR, t.child("date").child("weekYear").getValue(Integer.class));
-                    c.set(Calendar.MONTH, t.child("date").child("time").child("month").getValue(Integer.class));
-                    c.set(Calendar.DAY_OF_MONTH, t.child("date").child("time").child("date").getValue(Integer.class));
-                    c.set(Calendar.HOUR_OF_DAY, t.child("date").child("time").child("hours").getValue(Integer.class));
-                    c.set(Calendar.MINUTE, t.child("date").child("time").child("minutes").getValue(Integer.class));
-                    c.set(Calendar.SECOND, t.child("date").child("time").child("seconds").getValue(Integer.class));
-                    String end = (String) t.child("end").getValue();
-                    String key = (String) t.child("key").getValue();
-                    String name = (String) t.child("name").getValue();
-                    String notes = (String) t.child("notes").getValue();
-                    String repeat = (String) t.child("repeat").getValue();
-                    String start = (String) t.child("start").getValue();
-                    String state = (String) t.child("state").getValue();
-                    String way = (String) t.child("way").getValue();
-                    Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
-                    if (key.equals(k)) {
-                        tr = trip;
-                        tvName.setText(tr.getName());
-                    }
+                String end = (String) snapshot.child("end").getValue();
+                String key = (String) snapshot.child("key").getValue();
+                String name = (String) snapshot.child("name").getValue();
+                String notes = (String) snapshot.child("notes").getValue();
+                String repeat = (String) snapshot.child("repeat").getValue();
+                String start = (String) snapshot.child("start").getValue();
+                String state = (String) snapshot.child("state").getValue();
+                String way = (String) snapshot.child("way").getValue();
+                if (way.equals("One way Trip")) {
+                    Calendar goDate = Calendar.getInstance();
+                    goDate.set(Calendar.YEAR, snapshot.child("goDate").child("weekYear").getValue(Integer.class));
+                    goDate.set(Calendar.MONTH, snapshot.child("goDate").child("time").child("month").getValue(Integer.class));
+                    goDate.set(Calendar.DAY_OF_MONTH, snapshot.child("goDate").child("time").child("date").getValue(Integer.class));
+                    goDate.set(Calendar.HOUR_OF_DAY, snapshot.child("goDate").child("time").child("hours").getValue(Integer.class));
+                    goDate.set(Calendar.MINUTE, snapshot.child("goDate").child("time").child("minutes").getValue(Integer.class));
+                    goDate.set(Calendar.SECOND, snapshot.child("goDate").child("time").child("seconds").getValue(Integer.class));
+
+                    tr = new TripTest(goDate, name, state, start, end, key, notes, way, repeat);
+
+                } else {
+                    Calendar goDate = Calendar.getInstance();
+                    goDate.set(Calendar.YEAR, snapshot.child("goDate").child("weekYear").getValue(Integer.class));
+                    goDate.set(Calendar.MONTH, snapshot.child("goDate").child("time").child("month").getValue(Integer.class));
+                    goDate.set(Calendar.DAY_OF_MONTH, snapshot.child("goDate").child("time").child("date").getValue(Integer.class));
+                    goDate.set(Calendar.HOUR_OF_DAY, snapshot.child("goDate").child("time").child("hours").getValue(Integer.class));
+                    goDate.set(Calendar.MINUTE, snapshot.child("goDate").child("time").child("minutes").getValue(Integer.class));
+                    goDate.set(Calendar.SECOND, snapshot.child("goDate").child("time").child("seconds").getValue(Integer.class));
+
+                    Calendar returnDate = Calendar.getInstance();
+                    returnDate.set(Calendar.YEAR, snapshot.child("returnDate").child("weekYear").getValue(Integer.class));
+                    returnDate.set(Calendar.MONTH, snapshot.child("returnDate").child("time").child("month").getValue(Integer.class));
+                    returnDate.set(Calendar.DAY_OF_MONTH, snapshot.child("returnDate").child("time").child("date").getValue(Integer.class));
+                    returnDate.set(Calendar.HOUR_OF_DAY, snapshot.child("returnDate").child("time").child("hours").getValue(Integer.class));
+                    returnDate.set(Calendar.MINUTE, snapshot.child("returnDate").child("time").child("minutes").getValue(Integer.class));
+                    returnDate.set(Calendar.SECOND, snapshot.child("returnDate").child("time").child("seconds").getValue(Integer.class));
+
+                    tr = new TripTest(goDate, returnDate, name, state, start, end, key, notes, way, repeat);
                 }
+                tvName.setText(tr.getName());
             }
 
             @Override
