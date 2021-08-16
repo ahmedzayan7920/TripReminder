@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -100,8 +101,9 @@ public class DialogActivity extends AppCompatActivity {
                 notificationManager.cancel(NOTIFICATION_ID);
                 if (tr.getWay().equals("One way Trip")) {
                     Intent intent = new Intent(getApplicationContext(), BubbleService.class);
-                    intent.putExtra("notes", tr.getNotes());
+                    intent.putStringArrayListExtra("notes", tr.getNotes());
                     startService(intent);
+
                     if (ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(DialogActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -173,8 +175,10 @@ public class DialogActivity extends AppCompatActivity {
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
+
+
                     Intent intent = new Intent(getApplicationContext(), BubbleService.class);
-                    intent.putExtra("notes", tr.getNotes());
+                    intent.putStringArrayListExtra("notes", tr.getNotes());
                     startService(intent);
                     finish();
                 }
@@ -191,7 +195,7 @@ public class DialogActivity extends AppCompatActivity {
                 String end = (String) snapshot.child("end").getValue();
                 String key = (String) snapshot.child("key").getValue();
                 String name = (String) snapshot.child("name").getValue();
-                String notes = (String) snapshot.child("notes").getValue();
+                ArrayList<String> notes = (ArrayList<String>) snapshot.child("notes").getValue();
                 String repeat = (String) snapshot.child("repeat").getValue();
                 String start = (String) snapshot.child("start").getValue();
                 String state = (String) snapshot.child("state").getValue();

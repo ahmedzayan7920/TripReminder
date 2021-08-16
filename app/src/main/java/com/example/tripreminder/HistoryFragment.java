@@ -47,11 +47,22 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onShowNotesClick(int position) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                if (!trips.get(position).getNotes().isEmpty()){
-                    builder.setTitle("Notes")
-                            .setMessage(trips.get(position).getNotes())
-                            .show();
-                }else{
+                ArrayList<String> no = trips.get(position).getNotes();
+                if (!no.isEmpty()) {
+                    if (no.size() == 1 && no.get(0).equals("")){
+                        builder.setTitle("Notes")
+                                .setMessage("No Notes For This trip")
+                                .show();
+                    }else{
+                        String s = "";
+                        for (int i = 0 ; i < no.size() ; i++){
+                            s += no.get(i)+"\n";
+                        }
+                        builder.setTitle("Notes")
+                                .setMessage(s)
+                                .show();
+                    }
+                } else {
                     builder.setTitle("Notes")
                             .setMessage("No Notes for This Trip")
                             .show();
@@ -113,7 +124,7 @@ public class HistoryFragment extends Fragment {
                     String end = (String) t.child("end").getValue();
                     String key = (String) t.child("key").getValue();
                     String name = (String) t.child("name").getValue();
-                    String notes = (String) t.child("notes").getValue();
+                    ArrayList<String> notes = (ArrayList<String>) t.child("notes").getValue();
                     String repeat = (String) t.child("repeat").getValue();
                     String start = (String) t.child("start").getValue();
                     String state = (String) t.child("state").getValue();

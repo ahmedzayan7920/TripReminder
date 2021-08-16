@@ -6,17 +6,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+
 import androidx.core.content.ContextCompat;
+
 import com.siddharthks.bubbles.FloatingBubbleConfig;
 import com.siddharthks.bubbles.FloatingBubbleService;
 
+import java.util.ArrayList;
+
 public class BubbleService extends FloatingBubbleService {
-    String notes;
+    private static ArrayList<String> notes;
     public static BubbleService bubbleService;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        notes = intent.getStringExtra("notes");
+        notes = new ArrayList<>();
+        notes = intent.getStringArrayListExtra("notes");
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -24,15 +32,23 @@ public class BubbleService extends FloatingBubbleService {
     protected FloatingBubbleConfig getConfig() {
         Context context = getApplicationContext();
         View view = getInflater().inflate(R.layout.activity_bubble_view, null);
-        TextView tv = view.findViewById(R.id.tv_bubble_notes);
-        tv.setText(notes);
+        ListView list = view.findViewById(R.id.bubble_list_view_test);
+
+        NoteAdapter adapter = new NoteAdapter(this , notes);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(BubbleService.this, list.getAdapter().getItem(i).toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
         bubbleService = this;
         return new FloatingBubbleConfig.Builder()
                 .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.icon))
                 .removeBubbleIcon(ContextCompat.getDrawable(context, com.siddharthks.bubbles.R.drawable.close_default_icon))
-                .bubbleIconDp(100)
+                .bubbleIconDp(120)
                 .expandableView(view)
-                .removeBubbleIconDp(100)
+                .removeBubbleIconDp(120)
                 .paddingDp(4)
                 .borderRadiusDp(0)
                 .physicsEnabled(true)

@@ -3,6 +3,7 @@ package com.example.tripreminder;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -55,6 +56,8 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
 
     private LinearLayout addLayout;
 
+    public static ArrayList<String> notes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
         addBtnSave = findViewById(R.id.add_btn_save);
         addLayout = findViewById(R.id.add_return_layout);
 
+        notes = new ArrayList<>();
         allGoDate = Calendar.getInstance();
         allReturnDate = Calendar.getInstance();
         String key = getIntent().getStringExtra(UpComingFragment.TRIP_KEY);
@@ -86,7 +90,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                             String end = (String) snapshot.child("end").getValue();
                             String key = (String) snapshot.child("key").getValue();
                             String name = (String) snapshot.child("name").getValue();
-                            String notes = (String) snapshot.child("notes").getValue();
+                            notes = (ArrayList<String>) snapshot.child("notes").getValue();
                             String repeat = (String) snapshot.child("repeat").getValue();
                             String start = (String) snapshot.child("start").getValue();
                             String state = (String) snapshot.child("state").getValue();
@@ -258,8 +262,6 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                                         spinnerRepeat.setSelection(0);
                                         break;
                                 }
-
-                                addEtNotes.setText(trip.getNotes());
                             }
                         }
 
@@ -490,6 +492,15 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
             }
         });
 
+        addBtnAddNotes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddTestActivity.this, AddNotesActivity.class);
+                intent.putExtra("key", notes);
+                startActivity(intent);
+            }
+        });
+
         addBtnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -502,7 +513,9 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                             String end = addEtEnd.getText().toString();
                             String w = spinnerWay.getSelectedItem().toString();
                             String r = spinnerRepeat.getSelectedItem().toString();
-                            String n = addEtNotes.getText().toString();
+                            if (notes.isEmpty()){
+                                notes.add("");
+                            }
                             if (key == null) {
                                 String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
                                 HashMap<String, Object> hashMap = new HashMap<>();
@@ -513,7 +526,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                                 hashMap.put("start", start);
                                 hashMap.put("end", end);
                                 hashMap.put("key", key);
-                                hashMap.put("notes", n);
+                                hashMap.put("notes", notes);
                                 hashMap.put("way", w);
                                 hashMap.put("repeat", r);
                                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
@@ -528,7 +541,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                                 hashMap.put("start", start);
                                 hashMap.put("end", end);
                                 hashMap.put("key", key);
-                                hashMap.put("notes", n);
+                                hashMap.put("notes", notes);
                                 hashMap.put("way", w);
                                 hashMap.put("repeat", r);
                                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
@@ -549,7 +562,9 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                         String end = addEtEnd.getText().toString();
                         String w = spinnerWay.getSelectedItem().toString();
                         String r = spinnerRepeat.getSelectedItem().toString();
-                        String n = addEtNotes.getText().toString();
+                        if (notes.isEmpty()){
+                            notes.add("");
+                        }
                         if (key == null) {
                             String key = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
                             HashMap<String, Object> hashMap = new HashMap<>();
@@ -559,7 +574,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                             hashMap.put("start", start);
                             hashMap.put("end", end);
                             hashMap.put("key", key);
-                            hashMap.put("notes", n);
+                            hashMap.put("notes", notes);
                             hashMap.put("way", w);
                             hashMap.put("repeat", r);
                             FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
@@ -573,7 +588,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                             hashMap.put("start", start);
                             hashMap.put("end", end);
                             hashMap.put("key", key);
-                            hashMap.put("notes", n);
+                            hashMap.put("notes", notes);
                             hashMap.put("way", w);
                             hashMap.put("repeat", r);
                             FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);

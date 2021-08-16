@@ -16,6 +16,7 @@
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/drawable/person.xml" value="0.3828125" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/drawable/security.xml" value="0.3828125" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_add_and_edit.xml" value="0.3423913043478261" />
+        <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_add_notes.xml" value="0.36666666666666664" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_add_test.xml" value="0.36666666666666664" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_bubble_view.xml" value="0.36666666666666664" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_date_picker.xml" value="0.3423913043478261" />
@@ -26,6 +27,7 @@
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_register.xml" value="0.36367753623188404" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_start.xml" value="0.36666666666666664" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/activity_time_picker.xml" value="0.3423913043478261" />
+        <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/custom_row.xml" value="0.36666666666666664" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/drawer_header.xml" value="0.36231884057971014" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/fragment_history.xml" value="0.36231884057971014" />
         <entry key="..\:/iti/android/Day 9/TripReminder/app/src/main/res/layout/fragment_up_coming.xml" value="0.36231884057971014" />

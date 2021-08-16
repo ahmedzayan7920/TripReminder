@@ -5,6 +5,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.example.tripreminder.MainActivity.CHANNEL_ID;
 import static com.example.tripreminder.MainActivity.NOTIFICATION_ID;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,7 +19,9 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+@SuppressLint("SpecifyJobSchedulerIdRange")
 public class MyJobService extends JobService {
+
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
 
@@ -29,7 +32,6 @@ public class MyJobService extends JobService {
         String key = jobParameters.getExtras().getString("trip_key");
         String title = jobParameters.getExtras().getString("title");
         String body = jobParameters.getExtras().getString("body");
-        String repeat = jobParameters.getExtras().getString("trip_repeat");
 
         Intent intent = new Intent(this, DialogActivity.class);
         intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
@@ -62,10 +64,7 @@ public class MyJobService extends JobService {
                 .setCategory(NotificationCompat.CATEGORY_ALARM);
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
         managerCompat.notify(NOTIFICATION_ID, builder.build());
-/*
-        if (repeat.equals("Daily")){
-            getTrip(key);
-        }*/
+
         return false;
     }
 
@@ -73,30 +72,6 @@ public class MyJobService extends JobService {
     public boolean onStopJob(JobParameters jobParameters) {
         return false;
     }
-/*
-    private void getTrip(String key) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot t : snapshot.getChildren()) {
-                    trip = t.getValue(Trip.class);
-                    String k = FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).push().getKey();
-                    trip.setKey(k);
-                    int i = trip.getDate().getDate();
-                    Calendar d = new Date();
-                    d = trip.getDate();
-                    d.setDate(i+1);
-                    trip.setDate(d);
-                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(k).setValue(trip);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }*/
 
 }

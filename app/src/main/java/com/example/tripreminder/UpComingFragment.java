@@ -109,7 +109,6 @@ public class UpComingFragment extends Fragment {
                                 alert.setTitle("Deleting Alert!!");
                                 alert.setMessage("Are you sure !!!!");
                                 alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).removeValue();
@@ -139,10 +138,22 @@ public class UpComingFragment extends Fragment {
             @Override
             public void onNoteClick(int position, Context context) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                if (!trips.get(position).getNotes().isEmpty()) {
-                    builder.setTitle("Notes")
-                            .setMessage(trips.get(position).getNotes())
-                            .show();
+                ArrayList<String> no = trips.get(position).getNotes();
+                if (!no.isEmpty()) {
+                    if (no.size() == 1 && no.get(0).equals("")){
+                        builder.setTitle("Notes")
+                                .setMessage("No Notes For This trip")
+                                .show();
+                    }else{
+                        String s = "";
+                        for (int i = 0 ; i < no.size() ; i++){
+                            s += no.get(i)+"\n";
+                        }
+                        builder.setTitle("Notes")
+                                .setMessage(s)
+                                .show();
+                    }
+
                 } else {
                     builder.setTitle("Notes")
                             .setMessage("No Notes for This Trip")
@@ -156,8 +167,9 @@ public class UpComingFragment extends Fragment {
 
                 if (t1.getWay().equals("One way Trip")) {
                     Intent intent = new Intent(context, BubbleService.class);
-                    intent.putExtra("notes", t1.getNotes());
+                    intent.putStringArrayListExtra("notes", t1.getNotes());
                     context.startService(intent);
+
                     if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                             && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -230,7 +242,7 @@ public class UpComingFragment extends Fragment {
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
                     Intent intent = new Intent(context, BubbleService.class);
-                    intent.putExtra("notes", t1.getNotes());
+                    intent.putStringArrayListExtra("notes", t1.getNotes());
                     context.startService(intent);
                     getActivity().finish();
                 }
@@ -261,7 +273,7 @@ public class UpComingFragment extends Fragment {
                         String end = (String) t.child("end").getValue();
                         String key = (String) t.child("key").getValue();
                         String name = (String) t.child("name").getValue();
-                        String notes = (String) t.child("notes").getValue();
+                        ArrayList<String> notes = (ArrayList<String>) t.child("notes").getValue();
                         String repeat = (String) t.child("repeat").getValue();
                         String start = (String) t.child("start").getValue();
                         String state = (String) t.child("state").getValue();
