@@ -101,6 +101,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginEnd="18dp"
                 android:hint="Set Go Date"
+                android:textSize="20dp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -113,6 +114,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginEnd="18dp"
                 android:hint="Set Go Time"
+                android:textSize="20dp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -138,6 +140,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginEnd="18dp"
                 android:hint="Set Return Date"
+                android:textSize="20dp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -150,6 +153,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginEnd="18dp"
                 android:hint="Set Return Time"
+                android:textSize="20dp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -199,7 +203,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
             android:layout_marginBottom="18dp"
-            android:text="Add Notes"
+            android:text="Notes"
             app:backgroundTint="@color/teal_700" />
 
         <Button
