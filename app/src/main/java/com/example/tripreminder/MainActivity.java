@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -66,11 +64,9 @@ public class MainActivity extends AppCompatActivity {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, 123123);
+                startActivity(intent);
             }
         }
-
-
 
 
         tvUserName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
@@ -83,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpComingFragment()).commit();
             navigationView.setCheckedItem(R.id.drawer_upcoming);
             toolbar.setTitle("UpComing");
@@ -142,22 +138,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
         }
         return false;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 123123) {
-            if (resultCode == RESULT_OK) {
-                if (Settings.canDrawOverlays(this)) {
-                    // You have permission
-
-                }
-
-            }
-        }
     }
 }
 

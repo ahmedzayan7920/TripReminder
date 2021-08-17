@@ -293,11 +293,13 @@ public class UpComingFragment extends Fragment {
                                     info = new JobInfo.Builder(jobID, componentName)
                                             .setPeriodic(time)
                                             .setExtras(bundle)
+                                            .setOverrideDeadline(time+1000)
                                             .build();
                                 } else {
                                     info = new JobInfo.Builder(jobID, componentName)
                                             .setMinimumLatency(time)
                                             .setExtras(bundle)
+                                            .setOverrideDeadline(time+1000)
                                             .build();
                                 }
 

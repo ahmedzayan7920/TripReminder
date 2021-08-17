@@ -23,6 +23,21 @@
             android:textSize="21sp"
             tools:ignore="TextContrastCheck" />
 
+        <TextView
+            android:id="@+id/no_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
+            android:text="No Notes for this trip"
+            android:visibility="gone"
+            android:textColor="#FFFFFF"
+            android:textSize="21sp"
+            tools:ignore="TextContrastCheck" />
+
+
         <ListView
             android:id="@+id/bubble_list_view_test"
             android:layout_width="match_parent"

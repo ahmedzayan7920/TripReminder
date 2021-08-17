@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
@@ -33,7 +34,11 @@ public class BubbleService extends FloatingBubbleService {
         Context context = getApplicationContext();
         View view = getInflater().inflate(R.layout.activity_bubble_view, null);
         ListView list = view.findViewById(R.id.bubble_list_view_test);
-
+        TextView tv = view.findViewById(R.id.no_notes);
+        if (notes.size() == 1 && notes.get(0).equals("")){
+            notes.remove(0);
+            tv.setVisibility(View.VISIBLE);
+        }
         NoteAdapter adapter = new NoteAdapter(this , notes);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
