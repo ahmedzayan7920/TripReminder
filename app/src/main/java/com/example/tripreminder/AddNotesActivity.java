@@ -32,12 +32,12 @@ public class AddNotesActivity extends AppCompatActivity {
         txtNote = findViewById(R.id.txtNote);
         addNote = findViewById(R.id.fab_add_note);
         btn = findViewById(R.id.btn_finish);
-        if (!AddTestActivity.notes.isEmpty()){
-            if (AddTestActivity.notes.get(0).equals(""))
-                AddTestActivity.notes.remove(0);
+        if (!AddAndEditActivity.notes.isEmpty()){
+            if (AddAndEditActivity.notes.get(0).equals(""))
+                AddAndEditActivity.notes.remove(0);
         }
 
-        adapter = new ArrayAdapter(AddNotesActivity.this, android.R.layout.simple_list_item_1, AddTestActivity.notes);
+        adapter = new ArrayAdapter(AddNotesActivity.this, android.R.layout.simple_list_item_1, AddAndEditActivity.notes);
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -46,11 +46,11 @@ public class AddNotesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String s = txtNote.getText().toString();
                 if (!s.isEmpty()) {
-                    AddTestActivity.notes.add(s);
+                    AddAndEditActivity.notes.add(s);
                     txtNote.setText("");
                     list.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
-                    Log.i("012301230123654", AddTestActivity.notes.toString());
+                    Log.i("012301230123654", AddAndEditActivity.notes.toString());
                 } else {
                     txtNote.setError("Empty!!!");
                 }
@@ -85,7 +85,7 @@ public class AddNotesActivity extends AppCompatActivity {
                         .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                AddTestActivity.notes.remove(i);
+                                AddAndEditActivity.notes.remove(i);
                                 adapter.notifyDataSetChanged();
                             }
                         })

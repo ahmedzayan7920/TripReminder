@@ -98,7 +98,7 @@ public class UpComingFragment extends Fragment {
                         switch (item.getItemId()) {
                             case R.id.mi_edit:
                                 String tripKey = trips.get(position).getKey();
-                                Intent intent = new Intent(context, AddTestActivity.class);
+                                Intent intent = new Intent(context, AddAndEditActivity.class);
                                 intent.putExtra(TRIP_KEY, tripKey);
                                 startActivity(intent);
                                 return true;

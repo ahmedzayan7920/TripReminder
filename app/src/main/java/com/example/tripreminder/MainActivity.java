@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.main_add:
-                Intent intent = new Intent(getBaseContext(), AddTestActivity.class);
+                Intent intent = new Intent(getBaseContext(), AddAndEditActivity.class);
                 startActivity(intent);
                 return true;
         }

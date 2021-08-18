@@ -32,13 +32,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-public class AddTestActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddAndEditActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private EditText addEtName;
     private EditText addEtStart;
     private EditText addEtEnd;
-    private EditText addEtNotes;
-
     private TextView addTvGoDate;
     private TextView addTvGoTime;
     private TextView addTvReturnDate;
@@ -61,12 +59,11 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_test);
+        setContentView(R.layout.activity_add_and_edit);
 
         addEtName = findViewById(R.id.add_et_name);
         addEtStart = findViewById(R.id.add_et_start);
         addEtEnd = findViewById(R.id.add_et_end);
-        addEtNotes = findViewById(R.id.add_et_notes);
         addTvGoDate = findViewById(R.id.add_tv_go_date);
         addTvGoTime = findViewById(R.id.add_tv_go_time);
         addTvReturnDate = findViewById(R.id.add_tv_return_date);
@@ -299,7 +296,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                     int day = c.get(Calendar.DAY_OF_MONTH);
                     int month = c.get(Calendar.MONTH);
                     int year = c.get(Calendar.YEAR);
-                    DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    DatePickerDialog d = new DatePickerDialog(AddAndEditActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -312,7 +309,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                     d.show();
                 } else {
 
-                    DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    DatePickerDialog d = new DatePickerDialog(AddAndEditActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -337,7 +334,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                     Calendar c = Calendar.getInstance();
                     int hour = c.get(Calendar.HOUR_OF_DAY);
                     int minute = c.get(Calendar.MINUTE);
-                    TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    TimePickerDialog t = new TimePickerDialog(AddAndEditActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
@@ -377,7 +374,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                     }, hour, minute, false);
                     t.show();
                 } else {
-                    TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    TimePickerDialog t = new TimePickerDialog(AddAndEditActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
@@ -428,7 +425,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                     int day = c.get(Calendar.DAY_OF_MONTH);
                     int month = c.get(Calendar.MONTH);
                     int year = c.get(Calendar.YEAR);
-                    DatePickerDialog d = new DatePickerDialog(AddTestActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    DatePickerDialog d = new DatePickerDialog(AddAndEditActivity.this, new DatePickerDialog.OnDateSetListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
@@ -449,7 +446,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                     Calendar c = Calendar.getInstance();
                     int hour = c.get(Calendar.HOUR_OF_DAY);
                     int minute = c.get(Calendar.MINUTE);
-                    TimePickerDialog t = new TimePickerDialog(AddTestActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    TimePickerDialog t = new TimePickerDialog(AddAndEditActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @SuppressLint("SetTextI18n")
                         @Override
                         public void onTimeSet(TimePicker timePicker, int i, int i1) {
@@ -495,7 +492,7 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
         addBtnAddNotes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddTestActivity.this, AddNotesActivity.class);
+                Intent intent = new Intent(AddAndEditActivity.this, AddNotesActivity.class);
                 intent.putExtra("key", notes);
                 startActivity(intent);
             }
@@ -550,10 +547,10 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                         } else {
                             if (addTvReturnDate.getText().toString().isEmpty()) {
                                 addTvReturnTime.setError("Please Enter Return Date");
-                                Toast.makeText(AddTestActivity.this, "Please Enter Return Date", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddAndEditActivity.this, "Please Enter Return Date", Toast.LENGTH_SHORT).show();
                             } else if (addTvReturnTime.getText().toString().isEmpty()) {
                                 addTvReturnTime.setError("Please Enter Return Time");
-                                Toast.makeText(AddTestActivity.this, "Please Enter Return Time", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddAndEditActivity.this, "Please Enter Return Time", Toast.LENGTH_SHORT).show();
                             }
                         }
                     } else {
@@ -599,19 +596,19 @@ public class AddTestActivity extends AppCompatActivity implements AdapterView.On
                 } else {
                     if (addEtName.getText().toString().isEmpty()) {
                         addEtName.setError("Please Enter Trip Name");
-                        Toast.makeText(AddTestActivity.this, "Please Enter Trip Name", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAndEditActivity.this, "Please Enter Trip Name", Toast.LENGTH_SHORT).show();
                     } else if (addEtStart.getText().toString().isEmpty()) {
                         addEtStart.setError("Please Enter Trip Start Point");
-                        Toast.makeText(AddTestActivity.this, "Please Enter Trip Start Point", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAndEditActivity.this, "Please Enter Trip Start Point", Toast.LENGTH_SHORT).show();
                     } else if (addEtEnd.getText().toString().isEmpty()) {
                         addEtEnd.setError("Please Enter Trip End Point");
-                        Toast.makeText(AddTestActivity.this, "Please Enter Trip End Point", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAndEditActivity.this, "Please Enter Trip End Point", Toast.LENGTH_SHORT).show();
                     } else if (addTvGoDate.getText().toString().isEmpty()) {
                         addTvGoDate.setError("Please Enter Trip Date");
-                        Toast.makeText(AddTestActivity.this, "Please Enter Trip Date", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAndEditActivity.this, "Please Enter Trip Date", Toast.LENGTH_SHORT).show();
                     } else if (addTvGoTime.getText().toString().isEmpty()) {
                         addTvGoTime.setError("Please Enter Trip Time");
-                        Toast.makeText(AddTestActivity.this, "Please Enter Trip Time", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAndEditActivity.this, "Please Enter Trip Time", Toast.LENGTH_SHORT).show();
                     }
 
                 }
