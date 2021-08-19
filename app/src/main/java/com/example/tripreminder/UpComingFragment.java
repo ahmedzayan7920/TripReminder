@@ -140,14 +140,14 @@ public class UpComingFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 ArrayList<String> no = trips.get(position).getNotes();
                 if (!no.isEmpty()) {
-                    if (no.size() == 1 && no.get(0).equals("")){
+                    if (no.size() == 1 && no.get(0).equals("")) {
                         builder.setTitle("Notes")
                                 .setMessage("No Notes For This trip")
                                 .show();
-                    }else{
+                    } else {
                         String s = "";
-                        for (int i = 0 ; i < no.size() ; i++){
-                            s += no.get(i)+"\n";
+                        for (int i = 0; i < no.size(); i++) {
+                            s += no.get(i) + "\n";
                         }
                         builder.setTitle("Notes")
                                 .setMessage(s)
@@ -197,6 +197,9 @@ public class UpComingFragment extends Fragment {
                     hashMap.put("way", "One way Trip");
                     hashMap.put("repeat", t1.getRepeat());
                     FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(hashMap);
+
+                    Log.i("jfwknhfwfw", t1.getGoDate().toString());
+                    Log.i("jfwknhfwfw", t1.getReturnDate().toString());
 
                     String start = t1.getStart();
                     String end = t1.getEnd();
@@ -261,15 +264,9 @@ public class UpComingFragment extends Fragment {
                     trips.clear();
                     JobScheduler scheduler = (JobScheduler) getContext().getSystemService(JOB_SCHEDULER_SERVICE);
                     scheduler.cancelAll();
+
                     for (DataSnapshot t : snapshot.getChildren()) {
-                        Calendar c = Calendar.getInstance();
-                        c.set(Calendar.YEAR, t.child("goDate").child("weekYear").getValue(Integer.class));
-                        c.set(Calendar.MONTH, t.child("goDate").child("time").child("month").getValue(Integer.class));
-                        c.set(Calendar.DAY_OF_MONTH, t.child("goDate").child("time").child("date").getValue(Integer.class));
-                        c.set(Calendar.HOUR_OF_DAY, t.child("goDate").child("time").child("hours").getValue(Integer.class));
-                        c.set(Calendar.MINUTE, t.child("goDate").child("time").child("minutes").getValue(Integer.class));
-                        c.set(Calendar.SECOND, t.child("goDate").child("time").child("seconds").getValue(Integer.class));
-                        c.set(Calendar.MILLISECOND, 0);
+
                         String end = (String) t.child("end").getValue();
                         String key = (String) t.child("key").getValue();
                         String name = (String) t.child("name").getValue();
@@ -278,41 +275,102 @@ public class UpComingFragment extends Fragment {
                         String start = (String) t.child("start").getValue();
                         String state = (String) t.child("state").getValue();
                         String way = (String) t.child("way").getValue();
-                        TripTest trip = new TripTest(c, name, state, start, end, key, notes, way, repeat);
-                        if (trip.getState().equals("upcoming")) {
-                            long time = c.getTimeInMillis() - System.currentTimeMillis();
-                            if (time > 0) {
-                                ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
-                                JobInfo info;
-                                PersistableBundle bundle = new PersistableBundle();
-                                bundle.putString("trip_key", trip.getKey());
-                                bundle.putString("trip_repeat", trip.getRepeat());
-                                bundle.putString("title", trip.getName());
-                                bundle.putString("body", "From " + trip.getStart() + " to " + trip.getEnd());
-                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
-                                    info = new JobInfo.Builder(jobID, componentName)
-                                            .setPeriodic(time)
-                                            .setExtras(bundle)
-                                            .setOverrideDeadline(time+1000)
-                                            .build();
+
+                        Calendar c = Calendar.getInstance();
+                        c.set(Calendar.YEAR, t.child("goDate").child("weekYear").getValue(Integer.class));
+                        c.set(Calendar.MONTH, t.child("goDate").child("time").child("month").getValue(Integer.class));
+                        c.set(Calendar.DAY_OF_MONTH, t.child("goDate").child("time").child("date").getValue(Integer.class));
+                        c.set(Calendar.HOUR_OF_DAY, t.child("goDate").child("time").child("hours").getValue(Integer.class));
+                        c.set(Calendar.MINUTE, t.child("goDate").child("time").child("minutes").getValue(Integer.class));
+                        c.set(Calendar.SECOND, t.child("goDate").child("time").child("seconds").getValue(Integer.class));
+                        c.set(Calendar.MILLISECOND, 0);
+
+                        if (way.equals("Round Trip")) {
+                            Calendar returnDate = Calendar.getInstance();
+                            returnDate.set(Calendar.YEAR, t.child("returnDate").child("weekYear").getValue(Integer.class));
+                            returnDate.set(Calendar.MONTH, t.child("returnDate").child("time").child("month").getValue(Integer.class));
+                            returnDate.set(Calendar.DAY_OF_MONTH, t.child("returnDate").child("time").child("date").getValue(Integer.class));
+                            returnDate.set(Calendar.HOUR_OF_DAY, t.child("returnDate").child("time").child("hours").getValue(Integer.class));
+                            returnDate.set(Calendar.MINUTE, t.child("returnDate").child("time").child("minutes").getValue(Integer.class));
+                            returnDate.set(Calendar.SECOND, t.child("returnDate").child("time").child("seconds").getValue(Integer.class));
+
+                            TripTest trip = new TripTest(c, returnDate, name, state, start, end, key, notes, way, repeat);
+
+                            if (trip.getState().equals("upcoming")) {
+
+                                long time = c.getTimeInMillis() - System.currentTimeMillis();
+                                if (time > 0) {
+
+                                    ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
+                                    JobInfo info;
+                                    PersistableBundle bundle = new PersistableBundle();
+                                    bundle.putString("trip_key", trip.getKey());
+                                    bundle.putString("trip_repeat", trip.getRepeat());
+                                    bundle.putString("title", trip.getName());
+                                    bundle.putString("body", "From " + trip.getStart() + " to " + trip.getEnd());
+                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+                                        info = new JobInfo.Builder(jobID, componentName)
+                                                .setPeriodic(time)
+                                                .setExtras(bundle)
+                                                .setOverrideDeadline(time + 1000)
+                                                .build();
+                                    } else {
+                                        info = new JobInfo.Builder(jobID, componentName)
+                                                .setMinimumLatency(time)
+                                                .setExtras(bundle)
+                                                .setOverrideDeadline(time + 1000)
+                                                .build();
+                                    }
+                                    Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
+                                    scheduler.schedule(info);
+                                    jobID++;
+
+                                    trips.add(trip);
+                                    adapter.notifyDataSetChanged();
                                 } else {
-                                    info = new JobInfo.Builder(jobID, componentName)
-                                            .setMinimumLatency(time)
-                                            .setExtras(bundle)
-                                            .setOverrideDeadline(time+1000)
-                                            .build();
+                                    trip.setState("Time passed");
+                                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
+                                    Toast.makeText(getContext(), "Time Pass For some Trips", Toast.LENGTH_SHORT).show();
                                 }
+                            }
+                        } else {
+                            TripTest trip = new TripTest(c, name, state, start, end, key, notes, way, repeat);
 
-                                Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
-                                scheduler.schedule(info);
-                                jobID++;
+                            if (trip.getState().equals("upcoming")) {
+                                long time = c.getTimeInMillis() - System.currentTimeMillis();
+                                if (time > 0) {
+                                    ComponentName componentName = new ComponentName(getContext(), MyJobService.class);
+                                    JobInfo info;
+                                    PersistableBundle bundle = new PersistableBundle();
+                                    bundle.putString("trip_key", trip.getKey());
+                                    bundle.putString("trip_repeat", trip.getRepeat());
+                                    bundle.putString("title", trip.getName());
+                                    bundle.putString("body", "From " + trip.getStart() + " to " + trip.getEnd());
+                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N) {
+                                        info = new JobInfo.Builder(jobID, componentName)
+                                                .setPeriodic(time)
+                                                .setExtras(bundle)
+                                                .setOverrideDeadline(time + 1000)
+                                                .build();
+                                    } else {
+                                        info = new JobInfo.Builder(jobID, componentName)
+                                                .setMinimumLatency(time)
+                                                .setExtras(bundle)
+                                                .setOverrideDeadline(time + 1000)
+                                                .build();
+                                    }
 
-                                trips.add(trip);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                trip.setState("Time passed");
-                                FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
-                                Toast.makeText(getContext(), "Time Pass For some Trips", Toast.LENGTH_SHORT).show();
+                                    Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
+                                    scheduler.schedule(info);
+                                    jobID++;
+
+                                    trips.add(trip);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+                                    trip.setState("Time passed");
+                                    FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(trip.getKey()).setValue(trip);
+                                    Toast.makeText(getContext(), "Time Pass For some Trips", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }
@@ -331,3 +389,46 @@ public class UpComingFragment extends Fragment {
 
     }
 }
+
+/*
+                                Data.Builder data = new Data.Builder();
+                                data.putString("trip_key", trip.getKey());
+                                data.putString("title", trip.getName());
+                                data.putString("body", "From " + trip.getStart() + " to " + trip.getEnd());
+
+                                WorkRequest uploadWorkRequest =
+                                        new OneTimeWorkRequest.Builder(MyWorker.class)
+                                                .setInitialDelay(time, TimeUnit.MILLISECONDS)
+                                                .setInputData(data.build())
+                                                .build();
+                                WorkManager
+                                        .getInstance(getContext())
+                                        .enqueue(uploadWorkRequest);*/
+
+                                /*
+                                Intent intent = new Intent(getContext(), MyReceiver.class);
+                                intent.putExtra("trip_key", trip.getKey());
+                                intent.putExtra("title", trip.getName());
+                                intent.putExtra("body", "From " + trip.getStart() + " to " + trip.getEnd());
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                        getContext().getApplicationContext(), jobID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                if (repeat.equals("Daily"))
+                                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), 24*60*60*1000, pendingIntent);
+                                else if (repeat.equals("Weekly"))
+                                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), 7*24*60*60*1000, pendingIntent);
+                                else if (repeat.equals("Monthly"))
+                                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), 30*24*60*60*1000, pendingIntent);
+                                else
+                                    alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+                                Log.i("01230123", "Job " + jobID + " added after :  " + time + "  Milliseconds");
+                                Toast.makeText(getContext(), "Job " + jobID + " added after :  " + time + "  Milliseconds", Toast.LENGTH_SHORT).show();
+                                jobID++;*/
+
+
+/*AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
+                    for (int i = 0 ; i < snapshot.getChildrenCount() ; i++){
+                        Intent intent = new Intent(getContext(), MyReceiver.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                getContext().getApplicationContext(), i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.cancel(pendingIntent);
+                    }*/
