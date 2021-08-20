@@ -12,6 +12,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioAttributes;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -63,6 +64,10 @@ public class DialogActivity extends AppCompatActivity {
         try {
             notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
             r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.setAudioAttributes(new AudioAttributes
+                    .Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build());
             r.play();
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,6 +87,7 @@ public class DialogActivity extends AppCompatActivity {
                 tr.setState("Canceled");
                 FirebaseDatabase.getInstance().getReference("Trips").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(key).setValue(tr);
                 finish();
+                //MainActivity.mainActivity.finish();
             }
         });
 
@@ -182,6 +188,7 @@ public class DialogActivity extends AppCompatActivity {
                     startService(intent);
                     finish();
                 }
+                //MainActivity.mainActivity.finish();
             }
         });
 

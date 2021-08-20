@@ -14,7 +14,7 @@
 
         <AutoCompleteTextView
             android:id="@+id/txtNote"
-            android:layout_width="@dimen/_245sdp"
+            android:layout_width="@dimen/_235sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_margin="@dimen/_7sdp"
             android:hint="@string/type_your_note"
@@ -38,8 +38,8 @@
 
     <ListView
         android:id="@+id/bubble_list_view"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_476sdp" />
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_450sdp" />
 
     <Button
         android:id="@+id/btn_finish"

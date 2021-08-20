@@ -1,10 +1,10 @@
 package com.example.tripreminder;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -21,6 +21,6 @@ public class StartActivity extends AppCompatActivity {
                 startActivity(new Intent(StartActivity.this, LoginActivity.class));
                 finish();
             }
-        }, 3000);
+        }, 1500);
     }
 }

@@ -57,25 +57,6 @@ public class AddNotesActivity extends AppCompatActivity {
             }
         });
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String[] choose = {"Edit", "Delete"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddNotesActivity.this);
-                builder.setItems(choose, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (i == 0) {
-
-                        }
-                    }
-                })
-                        .setMessage("s")
-                        .show();
-
-            }
-        });
-
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
