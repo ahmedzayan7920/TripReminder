@@ -3,7 +3,9 @@ package com.example.tripreminder;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -195,8 +197,15 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (firebaseUser != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                if (!Settings.canDrawOverlays(this)) {
+                    Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                    startActivity(myIntent);
+                }
+            }else{
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+            }
         }
     }
 }

@@ -60,19 +60,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             int s = (int) (Math.random() * 10);
             LatLng endPoint = getLocationFromAddress(this, ends.get(i));
             LatLng startPoint = getLocationFromAddress(this, starts.get(i));
-            if (endPoint != null){
+            if (startPoint != null && endPoint!= null){
                 mMap.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(randomColor(s)))
                         .position(endPoint)
                         .title(ends.get(i)));
-            }
-            if (startPoint != null){
+
                 mMap.addMarker(new MarkerOptions()
                         .icon(BitmapDescriptorFactory.defaultMarker(randomColor(s)))
                         .position(startPoint)
                         .title(starts.get(i)));
-            }
-            if (startPoint != null && endPoint!= null){
+
                 mMap.addPolyline((new PolylineOptions()).add(startPoint,endPoint)
                         .width(5)
                         .color(roadColor(s))

@@ -1,6 +1,7 @@
 package com.example.tripreminder;
 
 import static android.content.Context.JOB_SCHEDULER_SERVICE;
+import static android.content.Context.POWER_SERVICE;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -67,6 +69,9 @@ public class UpComingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+
         View view = inflater.inflate(R.layout.fragment_up_coming, container, false);
         allDate = Calendar.getInstance();
         rv = view.findViewById(R.id.upcoming_rv);

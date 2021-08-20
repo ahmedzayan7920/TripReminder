@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +52,17 @@ public class MainActivity extends AppCompatActivity {
             flag = false;
         }
 
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("UpComing");
+        setSupportActionBar(toolbar);
+
+        tvUserName = view.findViewById(R.id.tv_user_name);
+        tvUserEmail = view.findViewById(R.id.tv_user_email);
+        ivUserImage = view.findViewById(R.id.iv_user_image);
+
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String packageName = getPackageName();
             PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
@@ -64,16 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("UpComing");
-        setSupportActionBar(toolbar);
-
-        tvUserName = view.findViewById(R.id.tv_user_name);
-        tvUserEmail = view.findViewById(R.id.tv_user_email);
-        ivUserImage = view.findViewById(R.id.iv_user_image);
-
-
+/*
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-
+*/
 
         tvUserName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
         tvUserEmail.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
