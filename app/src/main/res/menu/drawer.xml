@@ -3,28 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Main">
+    <item android:title="@string/main">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/drawer_upcoming"
                     android:icon="@drawable/ic_upcoming"
-                    android:title="UpComing" />
+                    android:title="@string/upcoming" />
                 <item
                     android:id="@+id/drawer_history"
                     android:icon="@drawable/ic_history"
-                    android:title="History" />
+                    android:title="@string/history" />
             </group>
         </menu>
     </item>
 
 
-    <item android:title="Other">
+    <item android:title="@string/other">
         <menu>
             <item
                 android:id="@+id/drawer_Logout"
                 android:icon="@drawable/ic_exit"
-                android:title="Logout" />
+                android:title="@string/logout" />
         </menu>
     </item>
 

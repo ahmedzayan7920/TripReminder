@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="7dp"
-    app:cardCornerRadius="10dp"
+    app:cardElevation="@dimen/_6sdp"
+    app:cardCornerRadius="@dimen/_7sdp"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,9 +17,9 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="14sp"
+            android:layout_marginStart="@dimen/_13sdp"
+            android:layout_marginTop="@dimen/_13sdp"
+            android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,8 +27,8 @@
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
-            android:textSize="14sp"
+            android:layout_marginStart="@dimen/_39sdp"
+            android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toEndOf="@+id/tv_date"
             app:layout_constraintTop_toTopOf="@+id/tv_date" />
 
@@ -36,8 +36,8 @@
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:textSize="18sp"
+            android:layout_marginTop="@dimen/_13sdp"
+            android:textSize="@dimen/_14ssp"
             app:layout_constraintStart_toStartOf="@+id/tv_date"
             app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
@@ -45,17 +45,17 @@
             android:id="@+id/tv_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="152dp"
-            android:textSize="14sp"
+            android:layout_marginStart="@dimen/_115sdp"
+            android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toEndOf="@+id/tv_name"
             app:layout_constraintTop_toTopOf="@+id/tv_name" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginStart="@dimen/_13sdp"
+            android:layout_marginEnd="@dimen/_13sdp"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,9 +65,9 @@
             android:id="@+id/tv_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="20dp"
-            android:textSize="16sp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:textSize="@dimen/_13ssp"
             app:layout_constraintStart_toEndOf="@+id/iv_arrow"
             app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
@@ -75,7 +75,7 @@
             android:id="@+id/iv_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="@dimen/_22sdp"
             app:layout_constraintStart_toStartOf="@+id/tv_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_name"
             android:src="@drawable/ic_arrow"
@@ -85,7 +85,7 @@
             android:id="@+id/tv_destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="@dimen/_13ssp"
             app:layout_constraintStart_toStartOf="@+id/tv_start"
             app:layout_constraintTop_toBottomOf="@+id/tv_start" />
 
@@ -93,7 +93,7 @@
             android:id="@+id/iv_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/_13sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_time"
             android:src="@drawable/ic_menu"
@@ -101,21 +101,21 @@
 
         <Button
             android:id="@+id/btn_start"
-            android:layout_width="264dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_39sdp"
+            android:layout_marginTop="@dimen/_13sdp"
             android:backgroundTint="#29A89C"
             android:text="@string/start"
             android:textColor="@color/white"
-            app:layout_constraintCircleRadius="15dp"
+            app:layout_constraintCircleRadius="@dimen/_13sdp"
             app:layout_constraintStart_toStartOf="@+id/iv_arrow"
             app:layout_constraintTop_toBottomOf="@+id/tv_destination"
             tools:ignore="TouchTargetSizeCheck,TextContrastCheck" />
 
         <ImageView
             android:id="@+id/iv_note"
-            android:layout_width="37dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
             app:layout_constraintEnd_toEndOf="@+id/iv_menu"
             app:layout_constraintTop_toTopOf="@+id/btn_start"
             android:src="@drawable/ic_note"

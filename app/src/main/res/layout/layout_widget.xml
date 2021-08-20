@@ -2,14 +2,14 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="65dp"
+    android:layout_width="@dimen/_50sdp"
     android:layout_height="wrap_content"
     android:id="@+id/chathead_bubble"
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/_57sdp"
+        android:layout_height="@dimen/_57sdp"
         android:id="@+id/chathead_image"
        android:src="@drawable/icon"
         tools:ignore="ContentDescription"/>

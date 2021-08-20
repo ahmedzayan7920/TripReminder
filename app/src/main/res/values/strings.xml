@@ -55,4 +55,26 @@
     <string name="delete_trip">Delete Trip</string>
     <string name="start">Start</string>
     <string name="settings">Settings</string>
+    <string name="start_point">Start Point</string>
+    <string name="end_point">End Point</string>
+    <string name="set_go_date">Set Go Date</string>
+    <string name="set_go_time">Set Go Time</string>
+    <string name="set_return_date">Set Return Date</string>
+    <string name="set_return_time">Set Return Time</string>
+    <string name="save">Save</string>
+    <string name="type_your_note">Type Your Note</string>
+    <string name="todo">TODO</string>
+    <string name="save_notes">Save Notes</string>
+    <string name="no_notes_for_this_trip">No Notes for this trip</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="don_t_have_an_account">Don\'t have an Account?</string>
+    <string name="signup">SignUp</string>
+    <string name="upcoming">UpComing</string>
+    <string name="history">History</string>
+    <string name="other">Other</string>
+    <string name="main">Main</string>
+    <string name="logout">Logout</string>
+    <string name="add">add</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

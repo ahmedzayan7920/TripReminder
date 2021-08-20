@@ -3,7 +3,7 @@
 
     <string name="navigation_drawer_open">افتح القائمة الجانبية</string>
     <string name="navigation_drawer_close">اغلق القائمة الجانبية</string>
-    <string name="Register"> جديد تسجيل</string>
+    <string name="Register">تسجيل</string>
     <string name="LOGIN">تسجيل الدخول</string>
     <string name="ForgetPasssword">نسيت كلمة السر</string>
     <string name="Google">جوجل</string>
@@ -13,7 +13,7 @@
     <string name="startDetails">تاريخ ووقت البداية</string>
     <string name="addTrip">اضافة رحلة</string>
     <string name="apiKey">AIzaSyCW_X5xn8RMYkRpAnZt_OEx1UAZgCpOVMM</string>
-    <string name="notes">ملاجظات</string>
+    <string name="notes">ملاحظات</string>
     <string name="addNote">List Item</string>
     <string name="title_activity_maps">Map</string>
     <string name="search">بحث</string>
@@ -33,7 +33,7 @@
     <string name="previous">السابق</string>
     <string name="trip_start_point">نقطة البداية</string>
     <string name="date_picker">اختيار التاريخ</string>
-    <string name="trip_time">Trip Time</string>
+    <string name="trip_time">وقت الرحلة</string>
     <string name="time_picker">اختيار الوقت</string>
     <string name="trip_notes">الملاحظات</string>
     <string name="trip_end_point">نقطة النهاية</string>
@@ -54,4 +54,26 @@
     <string name="delete_trip">امسح الرحلة</string>
     <string name="start">بداية</string>
     <string name="settings">الاعدادات</string>
+    <string name="start_point">نقطة البداية</string>
+    <string name="end_point">نقطة النهاية</string>
+    <string name="set_go_date">حدد تاريخ الذهاب</string>
+    <string name="set_go_time">حدد وقت الذهاب</string>
+    <string name="set_return_date">حدد تاريخ العودة</string>
+    <string name="set_return_time">حدد وقت العودة</string>
+    <string name="save">حفظ</string>
+    <string name="type_your_note">اكتب ملاحظتك</string>
+    <string name="todo">TODO</string>
+    <string name="save_notes">حفظ الملاحظات</string>
+    <string name="no_notes_for_this_trip">لا يوجد ملاحظات لهذه الرحلة</string>
+    <string name="forget_password">نسيت كلمة السر؟</string>
+    <string name="don_t_have_an_account">لا تملك حساب؟</string>
+    <string name="signup">تسجيل</string>
+    <string name="upcoming">القادم</string>
+    <string name="history">السابق</string>
+    <string name="other">اخري</string>
+    <string name="main">الرئيسية</string>
+    <string name="logout">تسجيل خروج</string>
+    <string name="add">اضافة</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">مسح</string>
 </resources>

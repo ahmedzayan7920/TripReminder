@@ -10,29 +10,29 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Trip Name"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:layout_marginTop="60dp"
+            android:text="@string/trip_name"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_50sdp"
             android:textColor="#ffffff"
-            android:textSize="18sp"
+            android:textSize="@dimen/_14ssp"
             android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/add_et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:hint="Trip Name"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:hint="@string/trip_name"
             android:textColor="#FFFFFF"
             android:textColorHint="#D8C9C9"
             android:maxLines="1"/>
@@ -40,22 +40,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start Point"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
+            android:text="@string/start_point"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:textColor="#ffffff"
-            android:textSize="18sp"
+            android:textSize="@dimen/_14ssp"
             android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/add_et_start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:hint="Start Point"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:hint="@string/start_point"
             android:textColor="#FFFFFF"
             android:textColorHint="#D8C9C9"
             android:maxLines="1"/>
@@ -63,22 +63,22 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="End Point"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
+            android:text="@string/end_point"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:textColor="#ffffff"
-            android:textSize="18sp"
+            android:textSize="@dimen/_14ssp"
             android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/add_et_end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:hint="End Point"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:hint="@string/end_point"
             android:textColor="#FFFFFF"
             android:textColorHint="#D8C9C9"
             android:maxLines="1"/>
@@ -89,19 +89,19 @@
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:weightSum="2">
 
             <TextView
                 android:id="@+id/add_tv_go_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:hint="Set Go Date"
-                android:textSize="20dp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:hint="@string/set_go_date"
+                android:textSize="@dimen/_16ssp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -111,10 +111,10 @@
                 android:id="@+id/add_tv_go_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:hint="Set Go Time"
-                android:textSize="20dp"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:hint="@string/set_go_time"
+                android:textSize="@dimen/_16ssp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -128,19 +128,19 @@
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:weightSum="2">
 
             <TextView
                 android:id="@+id/add_tv_return_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:hint="Set Return Date"
-                android:textSize="20dp"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:hint="@string/set_return_date"
+                android:textSize="@dimen/_16ssp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -150,10 +150,10 @@
                 android:id="@+id/add_tv_return_time"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:hint="Set Return Time"
-                android:textSize="20dp"
+                android:layout_marginStart="@dimen/_14sdp"
+                android:layout_marginEnd="@dimen/_14sdp"
+                android:hint="@string/set_return_time"
+                android:textSize="@dimen/_16ssp"
                 android:textColorHint="@color/red"
                 android:textColor="@color/blue"
                 android:layout_weight="1"
@@ -166,43 +166,43 @@
             android:orientation="horizontal"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp">
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp">
 
             <Spinner
                 android:id="@+id/add_spinner_repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"/>
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"/>
 
             <Spinner
                 android:id="@+id/add_spinner_way"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"/>
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_15sdp"/>
         </LinearLayout>
 
         <Button
             android:id="@+id/add_btn_add_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:text="Notes"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="@string/notes"
             app:backgroundTint="@color/teal_700" />
 
         <Button
             android:id="@+id/add_btn_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="18dp"
-            android:text="Save"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:text="@string/save"
             app:backgroundTint="@color/teal_700" />
     </LinearLayout>
 

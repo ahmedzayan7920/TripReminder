@@ -63,9 +63,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.1'
 
     def work_version = "2.5.0"
-
-    // (Java only)
     implementation "androidx.work:work-runtime:$work_version"
+
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+
 
 
 }

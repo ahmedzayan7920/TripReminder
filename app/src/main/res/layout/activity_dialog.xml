@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/trip_name"
-        android:textSize="30sp"/>
+        android:textSize="@dimen/_25ssp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
