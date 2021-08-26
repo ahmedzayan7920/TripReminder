@@ -196,16 +196,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (firebaseUser != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-                if (!Settings.canDrawOverlays(this)) {
-                    Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                    startActivity(myIntent);
-                }
-            }else{
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            if (!Settings.canDrawOverlays(this)) {
+                Intent myIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                startActivity(myIntent);
+            }
+        }else{
+            if (firebaseUser != null) {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }
         }
+
     }
 }

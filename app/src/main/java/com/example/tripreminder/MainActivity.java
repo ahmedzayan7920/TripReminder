@@ -42,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
         drawer = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.drawer_view);
         View view = navigationView.getHeaderView(0);

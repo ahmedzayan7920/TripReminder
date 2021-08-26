@@ -132,8 +132,8 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
                                     allGoDate.set(Calendar.YEAR, trip.getGoDate().get(Calendar.YEAR));
                                     allGoDate.set(Calendar.MONTH, trip.getGoDate().get(Calendar.MONTH));
                                     allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
-                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
-                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
+                                    allGoDate.set(Calendar.HOUR_OF_DAY, trip.getGoDate().get(Calendar.HOUR_OF_DAY));
+                                    allGoDate.set(Calendar.MINUTE, trip.getGoDate().get(Calendar.MINUTE));
 
                                     if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 0) {
                                         if (trip.getGoDate().get(Calendar.MINUTE) >= 10) {
@@ -171,8 +171,8 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
                                     allGoDate.set(Calendar.YEAR, trip.getGoDate().get(Calendar.YEAR));
                                     allGoDate.set(Calendar.MONTH, trip.getGoDate().get(Calendar.MONTH));
                                     allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
-                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
-                                    allGoDate.set(Calendar.DAY_OF_MONTH, trip.getGoDate().get(Calendar.DAY_OF_MONTH));
+                                    allGoDate.set(Calendar.HOUR_OF_DAY, trip.getGoDate().get(Calendar.HOUR_OF_DAY));
+                                    allGoDate.set(Calendar.MINUTE, trip.getGoDate().get(Calendar.MINUTE));
 
 
                                     if (trip.getGoDate().get(Calendar.HOUR_OF_DAY) == 0) {
@@ -209,8 +209,8 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
                                     allReturnDate.set(Calendar.YEAR, trip.getReturnDate().get(Calendar.YEAR));
                                     allReturnDate.set(Calendar.MONTH, trip.getReturnDate().get(Calendar.MONTH));
                                     allReturnDate.set(Calendar.DAY_OF_MONTH, trip.getReturnDate().get(Calendar.DAY_OF_MONTH));
-                                    allReturnDate.set(Calendar.DAY_OF_MONTH, trip.getReturnDate().get(Calendar.DAY_OF_MONTH));
-                                    allReturnDate.set(Calendar.DAY_OF_MONTH, trip.getReturnDate().get(Calendar.DAY_OF_MONTH));
+                                    allReturnDate.set(Calendar.HOUR_OF_DAY, trip.getReturnDate().get(Calendar.HOUR_OF_DAY));
+                                    allReturnDate.set(Calendar.MINUTE, trip.getReturnDate().get(Calendar.MINUTE));
 
                                     addTvReturnTime.setText(trip.getReturnDate().get(Calendar.HOUR_OF_DAY) + ":" + trip.getReturnDate().get(Calendar.MINUTE));
 
@@ -291,7 +291,6 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
         addTvGoDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null) {
                     Calendar c = Calendar.getInstance();
                     int day = c.get(Calendar.DAY_OF_MONTH);
                     int month = c.get(Calendar.MONTH);
@@ -307,21 +306,6 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
                         }
                     }, year, month, day);
                     d.show();
-                } else {
-
-                    DatePickerDialog d = new DatePickerDialog(AddAndEditActivity.this, new DatePickerDialog.OnDateSetListener() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                            addTvGoDate.setText(i + "/" + (i1 + 1) + "/" + i2);
-                            allGoDate.set(Calendar.YEAR, i);
-                            allGoDate.set(Calendar.MONTH, i1);
-                            allGoDate.set(Calendar.DAY_OF_MONTH, i2);
-                        }
-                    }, trip.getGoDate().get(Calendar.YEAR), trip.getGoDate().get(Calendar.MONTH), trip.getGoDate().get(Calendar.DAY_OF_MONTH));
-                    d.show();
-                }
-
 
             }
         });
@@ -330,7 +314,6 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
         addTvGoTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (key == null) {
                     Calendar c = Calendar.getInstance();
                     int hour = c.get(Calendar.HOUR_OF_DAY);
                     int minute = c.get(Calendar.MINUTE);
@@ -373,47 +356,6 @@ public class AddAndEditActivity extends AppCompatActivity implements AdapterView
                         }
                     }, hour, minute, false);
                     t.show();
-                } else {
-                    TimePickerDialog t = new TimePickerDialog(AddAndEditActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                        @SuppressLint("SetTextI18n")
-                        @Override
-                        public void onTimeSet(TimePicker timePicker, int i, int i1) {
-
-                            if (i == 0) {
-                                if (i1 >= 10) {
-                                    addTvGoTime.setText((12) + ":" + i1 + " am");
-                                } else {
-                                    addTvGoTime.setText((12) + ":" + "0" + i1 + " am");
-                                }
-                            } else if (i == 12) {
-                                if (i1 >= 10) {
-                                    addTvGoTime.setText((i) + ":" + i1 + " pm");
-                                } else {
-                                    addTvGoTime.setText((i) + ":" + "0" + i1 + " pm");
-                                }
-
-                            } else if (i >= 13) {
-                                if (i1 >= 10) {
-                                    addTvGoTime.setText((i - 12) + ":" + i1 + " pm");
-                                } else {
-                                    addTvGoTime.setText((i - 12) + ":" + "0" + i1 + " pm");
-                                }
-
-                            } else {
-                                if (i1 >= 10) {
-                                    addTvGoTime.setText((i) + ":" + i1 + " am");
-                                } else {
-                                    addTvGoTime.setText((i) + ":" + "0" + i1 + " am");
-                                }
-                            }
-                            allGoDate.set(Calendar.HOUR, i);
-                            allGoDate.set(Calendar.MINUTE, i1);
-                            allGoDate.set(Calendar.SECOND, 0);
-                            allGoDate.set(Calendar.MILLISECOND, 0);
-                        }
-                    }, trip.getGoDate().get(Calendar.HOUR_OF_DAY), trip.getGoDate().get(Calendar.MINUTE), false);
-                    t.show();
-                }
 
             }
         });
