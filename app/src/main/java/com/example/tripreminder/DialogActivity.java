@@ -48,7 +48,7 @@ public class DialogActivity extends AppCompatActivity {
     private Uri notification;
     private Ringtone r;
 
-    private TripTest tr;
+    private Trip tr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +216,7 @@ public class DialogActivity extends AppCompatActivity {
                     goDate.set(Calendar.MINUTE, snapshot.child("goDate").child("time").child("minutes").getValue(Integer.class));
                     goDate.set(Calendar.SECOND, snapshot.child("goDate").child("time").child("seconds").getValue(Integer.class));
 
-                    tr = new TripTest(goDate, name, state, start, end, key, notes, way, repeat);
+                    tr = new Trip(goDate, name, state, start, end, key, notes, way, repeat);
 
                 } else {
                     Calendar goDate = Calendar.getInstance();
@@ -235,7 +235,7 @@ public class DialogActivity extends AppCompatActivity {
                     returnDate.set(Calendar.MINUTE, snapshot.child("returnDate").child("time").child("minutes").getValue(Integer.class));
                     returnDate.set(Calendar.SECOND, snapshot.child("returnDate").child("time").child("seconds").getValue(Integer.class));
 
-                    tr = new TripTest(goDate, returnDate, name, state, start, end, key, notes, way, repeat);
+                    tr = new Trip(goDate, returnDate, name, state, start, end, key, notes, way, repeat);
                 }
                 tvName.setText(tr.getName());
             }

@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripViewHolder> {
     private Context context;
-    private ArrayList<TripTest> trips;
+    private ArrayList<Trip> trips;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -83,7 +83,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
             cv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    TripTest trip = trips.get(getAdapterPosition());
+                    Trip trip = trips.get(getAdapterPosition());
                     trip.setExpand(!trip.isExpand());
                     notifyItemChanged(getAdapterPosition());
                 }
@@ -91,7 +91,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
         }
     }
 
-    public HistoryAdapter(Context context, ArrayList<TripTest> trips) {
+    public HistoryAdapter(Context context, ArrayList<Trip> trips) {
         this.context = context;
         this.trips = trips;
     }
@@ -104,7 +104,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.TripView
 
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        TripTest t = trips.get(position);
+        Trip t = trips.get(position);
         int year = t.getGoDate().get(Calendar.YEAR);
         int month = t.getGoDate().get(Calendar.MONTH);
         int day = t.getGoDate().get(Calendar.DAY_OF_MONTH);

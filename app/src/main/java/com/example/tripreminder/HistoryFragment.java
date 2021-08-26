@@ -27,7 +27,7 @@ import java.util.Calendar;
 public class HistoryFragment extends Fragment {
     private RecyclerView rv2;
     private HistoryAdapter adapter;
-    private ArrayList<TripTest> trips;
+    private ArrayList<Trip> trips;
     private FloatingActionButton fab;
 
     @Override
@@ -129,7 +129,7 @@ public class HistoryFragment extends Fragment {
                     String start = (String) t.child("start").getValue();
                     String state = (String) t.child("state").getValue();
                     String way = (String) t.child("way").getValue();
-                    TripTest trip = new TripTest(c, name, state, start, end, key, notes, way, repeat);
+                    Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
                     if (trip.getState().equals("upcoming")) {
 
                     } else {

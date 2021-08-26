@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.tripreminder">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -14,7 +13,6 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
-
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher_test"
@@ -22,9 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_test_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TripReminder">
-        <receiver android:name=".MyReceiver"
-            android:enabled="true"
-            android:exported="true"/>
+
         <activity
             android:name=".AddNotesActivity"
             android:exported="true"
@@ -72,9 +68,9 @@
 
         <activity
             android:name=".DialogActivity"
+            android:excludeFromRecents="true"
             android:exported="true"
             android:label="Alert"
-            android:excludeFromRecents="true"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".LoginActivity"

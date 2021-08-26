@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     static boolean flag = true;
     public static MainActivity mainActivity;
 
+    private String fullScreenInd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,24 @@ public class MainActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl())
                 .into(ivUserImage);
+/*
+        fullScreenInd = getIntent().getStringExtra("fullScreenIndicator");
+        if ("y".equals(fullScreenInd)) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            getSupportActionBar().hide();
+
+            ivUserImage.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            ivUserImage.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+            ivUserImage.setAdjustViewBounds(false);
+            ivUserImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        }*/
+        ivUserImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);

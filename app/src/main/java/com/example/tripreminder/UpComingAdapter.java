@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripViewHolder> {
     private Context context;
-    private ArrayList<TripTest> trips;
+    private ArrayList<Trip> trips;
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -92,7 +92,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
         }
     }
 
-    public UpComingAdapter(Context context, ArrayList<TripTest> trips) {
+    public UpComingAdapter(Context context, ArrayList<Trip> trips) {
         this.context = context;
         this.trips = trips;
     }
@@ -105,7 +105,7 @@ public class UpComingAdapter extends RecyclerView.Adapter<UpComingAdapter.TripVi
 
     @Override
     public void onBindViewHolder(@NonNull TripViewHolder holder, int position) {
-        TripTest t = trips.get(position);
+        Trip t = trips.get(position);
         int year = t.getGoDate().get(Calendar.YEAR);
         int month = t.getGoDate().get(Calendar.MONTH);
         int day = t.getGoDate().get(Calendar.DAY_OF_MONTH);

@@ -1,7 +1,6 @@
 package com.example.tripreminder;
 
 import static android.content.Context.JOB_SCHEDULER_SERVICE;
-import static android.content.Context.POWER_SERVICE;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -18,7 +17,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.os.PowerManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -48,7 +46,7 @@ import java.util.HashMap;
 public class UpComingFragment extends Fragment {
     private RecyclerView rv;
     private UpComingAdapter adapter;
-    private ArrayList<TripTest> trips;
+    private ArrayList<Trip> trips;
     private static int position;
     public static final String TRIP_KEY = null;
     private ProgressDialog pd;
@@ -168,7 +166,7 @@ public class UpComingFragment extends Fragment {
 
             @Override
             public void onStartClick(int position, Context context) {
-                TripTest t1 = trips.get(position);
+                Trip t1 = trips.get(position);
 
                 if (t1.getWay().equals("One way Trip")) {
                     Intent intent = new Intent(context, BubbleService.class);
@@ -299,7 +297,7 @@ public class UpComingFragment extends Fragment {
                             returnDate.set(Calendar.MINUTE, t.child("returnDate").child("time").child("minutes").getValue(Integer.class));
                             returnDate.set(Calendar.SECOND, t.child("returnDate").child("time").child("seconds").getValue(Integer.class));
 
-                            TripTest trip = new TripTest(c, returnDate, name, state, start, end, key, notes, way, repeat);
+                            Trip trip = new Trip(c, returnDate, name, state, start, end, key, notes, way, repeat);
 
                             if (trip.getState().equals("upcoming")) {
 
@@ -339,7 +337,7 @@ public class UpComingFragment extends Fragment {
                                 }
                             }
                         } else {
-                            TripTest trip = new TripTest(c, name, state, start, end, key, notes, way, repeat);
+                            Trip trip = new Trip(c, name, state, start, end, key, notes, way, repeat);
 
                             if (trip.getState().equals("upcoming")) {
                                 long time = c.getTimeInMillis() - System.currentTimeMillis();

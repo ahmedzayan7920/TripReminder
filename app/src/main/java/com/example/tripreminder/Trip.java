@@ -3,7 +3,7 @@ package com.example.tripreminder;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class TripTest {
+public class Trip {
     private Calendar goDate;
     private Calendar returnDate;
     private String name;
@@ -16,13 +16,13 @@ public class TripTest {
     private String way;
     private String repeat;
 
-    public TripTest() {
+    public Trip() {
 
     }
 
 
 
-    public TripTest(Calendar goDate, Calendar returnDate, String name, String state, String start, String end, String key, ArrayList<String> notes, String way, String repeat) {
+    public Trip(Calendar goDate, Calendar returnDate, String name, String state, String start, String end, String key, ArrayList<String> notes, String way, String repeat) {
         this.goDate = goDate;
         this.returnDate = returnDate;
         this.name = name;
@@ -35,7 +35,7 @@ public class TripTest {
         this.repeat = repeat;
     }
 
-    public TripTest(Calendar goDate, String name, String state, String start, String end, String key, ArrayList<String> notes, String way, String repeat) {
+    public Trip(Calendar goDate, String name, String state, String start, String end, String key, ArrayList<String> notes, String way, String repeat) {
         this.goDate = goDate;
         this.returnDate = returnDate;
         this.name = name;
