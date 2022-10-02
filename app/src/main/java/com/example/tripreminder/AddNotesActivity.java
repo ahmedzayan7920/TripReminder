@@ -32,7 +32,7 @@ public class AddNotesActivity extends AppCompatActivity {
         txtNote = findViewById(R.id.txtNote);
         addNote = findViewById(R.id.fab_add_note);
         btn = findViewById(R.id.btn_finish);
-        if (!AddAndEditActivity.notes.isEmpty()){
+        if (!AddAndEditActivity.notes.isEmpty()) {
             if (AddAndEditActivity.notes.get(0).equals(""))
                 AddAndEditActivity.notes.remove(0);
         }

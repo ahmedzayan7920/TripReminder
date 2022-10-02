@@ -133,12 +133,14 @@ public class MainActivity extends AppCompatActivity {
                         navigationView.setCheckedItem(R.id.drawer_upcoming);
                         toolbar.setTitle("UpComing");
                         toolbar.getMenu().getItem(0).setVisible(true);
+                        toolbar.getMenu().getItem(1).setVisible(false);
                         break;
                     case R.id.drawer_history:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HistoryFragment()).commit();
                         navigationView.setCheckedItem(R.id.drawer_history);
                         toolbar.setTitle("History");
                         toolbar.getMenu().getItem(0).setVisible(false);
+                        toolbar.getMenu().getItem(1).setVisible(true);
                         break;
                     case R.id.drawer_Logout:
                         FirebaseAuth.getInstance().signOut();
@@ -165,16 +167,19 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         menu.findItem(R.id.main_add);
+        menu.findItem(R.id.main_map).setVisible(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.main_add:
-                Intent intent = new Intent(getBaseContext(), AddAndEditActivity.class);
-                startActivity(intent);
-                return true;
+        if (item.getItemId() == R.id.main_add) {
+            Intent intent = new Intent(getBaseContext(), AddAndEditActivity.class);
+            startActivity(intent);
+            return true;
+        }else if (item.getItemId() == R.id.main_map) {
+            startActivity(new Intent(getBaseContext() , MapsActivity.class));
+            return true;
         }
         return false;
     }

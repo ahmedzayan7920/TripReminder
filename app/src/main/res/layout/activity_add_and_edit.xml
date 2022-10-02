@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="#29A89C"
+    android:background="#FFFFFF"
     tools:context=".AddAndEditActivity">
 
     <LinearLayout
@@ -16,14 +16,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/trip_name"
             android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_50sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_50sdp"
-            android:textColor="#ffffff"
+            android:text="@string/trip_name"
+            android:textColor="#000000"
             android:textSize="@dimen/_14ssp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/add_et_name"
@@ -33,20 +33,22 @@
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
             android:hint="@string/trip_name"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#D8C9C9"
-            android:maxLines="1"/>
+            android:importantForAutofill="no"
+            android:inputType="textAutoComplete"
+            android:maxLines="1"
+            android:textColor="#000000"
+            android:textColorHint="#D8C9C9" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/start_point"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:textColor="#ffffff"
+            android:text="@string/start_point"
+            android:textColor="#000000"
             android:textSize="@dimen/_14ssp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/add_et_start"
@@ -56,20 +58,22 @@
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
             android:hint="@string/start_point"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#D8C9C9"
-            android:maxLines="1"/>
+            android:importantForAutofill="no"
+            android:inputType="textAutoComplete"
+            android:maxLines="1"
+            android:textColor="#000000"
+            android:textColorHint="#D8C9C9" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/end_point"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:textColor="#ffffff"
+            android:text="@string/end_point"
+            android:textColor="#000000"
             android:textSize="@dimen/_14ssp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/add_et_end"
@@ -79,19 +83,21 @@
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
             android:hint="@string/end_point"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#D8C9C9"
-            android:maxLines="1"/>
+            android:importantForAutofill="no"
+            android:inputType="textAutoComplete"
+            android:maxLines="1"
+            android:textColor="#000000"
+            android:textColorHint="#D8C9C9" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <TextView
@@ -100,12 +106,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="@string/set_go_date"
-                android:textSize="@dimen/_16ssp"
-                android:textColorHint="@color/red"
-                android:textColor="@color/blue"
                 android:layout_weight="1"
-                android:gravity="end"/>
+                android:gravity="end"
+                android:hint="@string/set_go_date"
+                android:textColor="@color/blue"
+                android:textColorHint="@color/red"
+                android:textSize="@dimen/_16ssp" />
 
             <TextView
                 android:id="@+id/add_tv_go_time"
@@ -113,24 +119,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_15sdp"
-                android:hint="@string/set_go_time"
-                android:textSize="@dimen/_16ssp"
-                android:textColorHint="@color/red"
-                android:textColor="@color/blue"
                 android:layout_weight="1"
-                android:gravity="start"/>
+                android:gravity="start"
+                android:hint="@string/set_go_time"
+                android:textColor="@color/blue"
+                android:textColorHint="@color/red"
+                android:textSize="@dimen/_16ssp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/add_return_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_15sdp"
+            android:gravity="center"
+            android:orientation="horizontal"
             android:weightSum="2">
 
             <TextView
@@ -139,12 +145,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_14sdp"
                 android:layout_marginEnd="@dimen/_14sdp"
-                android:hint="@string/set_return_date"
-                android:textSize="@dimen/_16ssp"
-                android:textColorHint="@color/red"
-                android:textColor="@color/blue"
                 android:layout_weight="1"
-                android:gravity="end"/>
+                android:gravity="end"
+                android:hint="@string/set_return_date"
+                android:textColor="@color/blue"
+                android:textColorHint="@color/red"
+                android:textSize="@dimen/_16ssp" />
 
             <TextView
                 android:id="@+id/add_tv_return_time"
@@ -152,37 +158,39 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_14sdp"
                 android:layout_marginEnd="@dimen/_14sdp"
-                android:hint="@string/set_return_time"
-                android:textSize="@dimen/_16ssp"
-                android:textColorHint="@color/red"
-                android:textColor="@color/blue"
                 android:layout_weight="1"
-                android:gravity="start"/>
+                android:gravity="start"
+                android:hint="@string/set_return_time"
+                android:textColor="@color/blue"
+                android:textColorHint="@color/red"
+                android:textSize="@dimen/_16ssp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginEnd="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_15sdp">
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <Spinner
                 android:id="@+id/add_spinner_repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_15sdp"/>
+                android:layout_marginEnd="@dimen/_15sdp"
+                />
 
             <Spinner
                 android:id="@+id/add_spinner_way"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_15sdp"/>
+                android:layout_marginEnd="@dimen/_15sdp"
+                />
         </LinearLayout>
 
         <Button

@@ -51,15 +51,15 @@ public class BubbleService extends FloatingBubbleService {
         return new FloatingBubbleConfig.Builder()
                 .bubbleIcon(ContextCompat.getDrawable(context, R.drawable.icon))
                 .removeBubbleIcon(ContextCompat.getDrawable(context, com.siddharthks.bubbles.R.drawable.close_default_icon))
-                .bubbleIconDp(120)
+                .bubbleIconDp(100)
                 .expandableView(view)
-                .removeBubbleIconDp(120)
+                .removeBubbleIconDp(80)
                 .paddingDp(4)
                 .borderRadiusDp(0)
                 .physicsEnabled(true)
                 .expandableColor(Color.WHITE)
                 .triangleColor(0xFF215A64)
-                .gravity(Gravity.LEFT)
+                .gravity(Gravity.START)
                 .build();
     }
 }

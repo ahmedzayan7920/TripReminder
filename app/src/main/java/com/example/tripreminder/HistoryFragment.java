@@ -28,13 +28,13 @@ public class HistoryFragment extends Fragment {
     private RecyclerView rv2;
     private HistoryAdapter adapter;
     private ArrayList<Trip> trips;
-    private FloatingActionButton fab;
+//    private FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
-        fab = view.findViewById(R.id.fab_map);
+//        fab = view.findViewById(R.id.fab_map);
         rv2 = view.findViewById(R.id.history_rv);
         trips = new ArrayList<>();
         getTrips();
@@ -98,12 +98,12 @@ public class HistoryFragment extends Fragment {
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext() , MapsActivity.class));
-            }
-        });
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startActivity(new Intent(getContext() , MapsActivity.class));
+//            }
+//        });
 
         return view;
     }

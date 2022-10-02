@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#29A89C"
+    android:background="#ffffff"
     tools:context=".AddNotesActivity">
 
     <LinearLayout
@@ -14,11 +14,11 @@
 
         <AutoCompleteTextView
             android:id="@+id/txtNote"
-            android:layout_width="@dimen/_235sdp"
+            android:layout_width="@dimen/_250sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_margin="@dimen/_7sdp"
             android:hint="@string/type_your_note"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textColorHint="#D8C9C9"
             android:textColorLink="@color/teal_700" />
 
@@ -28,10 +28,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             app:backgroundTint="@color/teal_700"
+            android:foregroundTint="@color/white"
+            android:tint="@color/white"
             app:srcCompat="@android:drawable/ic_input_add"
             tools:ignore="SpeakableTextPresentCheck"
             android:contentDescription="@string/todo"
-            android:layout_margin="@dimen/_7sdp"/>
+            android:layout_marginBottom="@dimen/_7sdp"/>
 
     </LinearLayout>
 
@@ -39,7 +41,7 @@
     <ListView
         android:id="@+id/bubble_list_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_450sdp" />
+        android:layout_height="@dimen/_460sdp" />
 
     <Button
         android:id="@+id/btn_finish"
